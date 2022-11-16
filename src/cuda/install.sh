@@ -12,7 +12,7 @@ apt install -y --no-install-recommends  \
 
 echo "Downloading CUDA keyring...";
 
-nv_arch="$(uname -p)";
+nv_arch="$(uname -m)";
 
 if [[ "$nv_arch" == aarch64 ]]; then
     nv_arch="sbsa";

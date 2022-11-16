@@ -29,7 +29,7 @@ chmod 0644 /etc/apt/trusted.gpg.d/*.gpg || true;
 echo "Adding NVHPC SDK apt repository..."
 
 # Install NVHPC-SDK apt repository
-apt-add-repository -y "deb https://developer.download.nvidia.com/hpc-sdk/ubuntu/amd64 /";
+apt-add-repository -y "deb https://developer.download.nvidia.com/hpc-sdk/ubuntu/$(dpkg-architecture -q DEB_BUILD_ARCH) /";
 
 echo "Installing NVHPC SDK..."
 

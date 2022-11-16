@@ -52,10 +52,7 @@ if [[ ! -L /usr/local/cuda ]]; then
     ln -s "/usr/local/cuda-${CUDAVERSION}" "/usr/local/cuda";
 fi
 
-for x in "/etc/skel/.bashrc" \
-         "/etc/skel/.profile" \
-         "${_CONTAINER_USER_HOME}/.bashrc" \
-         "${_CONTAINER_USER_HOME}/.profile"; do
+for x in  {/etc/skel,${_CONTAINER_USER_HOME}}/.bashrc; do
     cat <<EOF >> $x
 export CUDA_HOME="/usr/local/cuda";
 export PATH="/usr/local/nvidia/bin:\$CUDA_HOME/bin:\${PATH:+\$PATH:}";

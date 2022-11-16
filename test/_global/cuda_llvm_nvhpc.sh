@@ -16,11 +16,9 @@ set -ex
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib
 
->&2 echo "BASH_ENV=$BASH_ENV"
->&2 cat "${BASH_ENV:-/etc/bash_env}"
->&2 source "${BASH_ENV:-/etc/bash_env}"
->&2 echo "PATH=$PATH"
 >&2 module list
+>&2 echo "PATH=$PATH"
+>&2 echo "BASH_ENV=$BASH_ENV"
 
 # Check CUDA
 CUDA_VERSION="$(\

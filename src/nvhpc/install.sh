@@ -64,10 +64,7 @@ module try-load hpcx-mt;
 module try-load hpcx;
 EOF
 
-for x in "/etc/skel/.bashrc" \
-         "/etc/skel/.profile" \
-         "${_CONTAINER_USER_HOME}/.bashrc" \
-         "${_CONTAINER_USER_HOME}/.profile"; do
+for x in {/etc/skel,${_CONTAINER_USER_HOME}}/.bashrc; do
     cat <<EOF >> $x
 export NVHPC="${NVHPC}";
 export NVHPC_VERSION="${NVHPC_VERSION}";

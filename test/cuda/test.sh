@@ -12,6 +12,12 @@ set -ex
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib
 
+CUDA_VERSION="$(\
+    apt policy cuda-compiler-${cuda_ver} 2>/dev/null \
+  | grep -E 'Candidate: (.*).*$' - \
+  | cut -d':' -f2 \
+  | cut -d'-' -f1)";
+
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
 check "version" echo "$CUDA_VERSION" | grep '11.8.0'

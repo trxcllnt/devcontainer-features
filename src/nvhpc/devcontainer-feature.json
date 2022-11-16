@@ -13,5 +13,12 @@
             "default": "22.9",
             "description": "Version of NVHPC SDK to install."
         }
+    },
+    "containerEnv": {
+        "NVHPC": "/opt/nvidia/hpc_sdk",
+        "NVHPC_VERSION": "${NVHPCVERSION}",
+        "NVHPC_ROOT": "${NVHPC}/Linux_x86_64/${NVHPCVERSION}",
+        "NVHPC_CUDA_HOME": "/usr/local/cuda",
+        "MODULEPATH": "${NVHPC}/modulefiles:${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles"
     }
 }

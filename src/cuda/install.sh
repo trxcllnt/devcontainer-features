@@ -47,16 +47,6 @@ apt install -y --no-install-recommends  \
     cuda-command-line-tools-${cuda_ver} \
     ;
 
-export CUDA_HOME="/usr/local/cuda";
-export CUDA_VERSION="$(\
-    apt policy cuda-compiler-${cuda_ver} 2>/dev/null \
-  | grep -E 'Candidate: (.*).*$' - \
-  | cut -d':' -f2 \
-  | cut -d'-' -f1)";
-
-export PATH="/usr/local/nvidia/bin:$CUDA_HOME/bin:${PATH:+$PATH:}";
-export LIBRARY_PATH="${LIBRARY_PATH:+$LIBRARY_PATH:}$CUDA_HOME/lib64/stubs";
-
 if [[ ! -L $CUDA_HOME ]]; then
     # Create /usr/local/cuda symlink
     ln -s "$CUDA_HOME-${CUDAVERSION}" "$CUDA_HOME";

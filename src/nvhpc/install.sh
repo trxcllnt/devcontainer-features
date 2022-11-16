@@ -54,8 +54,8 @@ bash "${NVHPC_ROOT}/compilers/bin/makelocalrc" \
     -g77 "$(which gfortran)"
 
 # Install NVHPC modules
-# rm -rf /usr/share/lmod/lmod/modulefiles;
-# ln -sf "${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles" /usr/share/lmod/lmod/modulefiles;
+rm -rf /usr/share/lmod/lmod/modulefiles;
+ln -sf "${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles" /usr/share/lmod/lmod/modulefiles;
 
 cat <<EOF > /etc/profile.d/z-nvhpc-modules.sh
 #! /usr/bin/env bash

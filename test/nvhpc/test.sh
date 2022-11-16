@@ -16,13 +16,14 @@ source dev-container-features-test-lib
 >&2 cat "${BASH_ENV:-/etc/bash_env}"
 >&2 source "${BASH_ENV:-/etc/bash_env}"
 >&2 echo "PATH=$PATH"
+>&2 module list
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "version" echo "$NVHPC_VERSION" | grep '22.9'
-check "installed" stat /opt/nvidia/hpc_sdk
-check "nvc++ exists and is on path" which nvc++
+>&2 check "version" echo "$NVHPC_VERSION" | grep '22.9'
+>&2 check "installed" stat /opt/nvidia/hpc_sdk
+>&2 check "nvc++ exists and is on path" which nvc++
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.
-reportResults
+>&2 reportResults

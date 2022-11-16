@@ -16,10 +16,11 @@ set -ex
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib
 
-echo "$BASH_ENV"
-cat "${BASH_ENV:-/etc/bash_env}"
-source "${BASH_ENV:-/etc/bash_env}"
-echo "$PATH"
+>&2 echo "BASH_ENV=$BASH_ENV"
+>&2 cat "${BASH_ENV:-/etc/bash_env}"
+>&2 source "${BASH_ENV:-/etc/bash_env}"
+>&2 echo "PATH=$PATH"
+>&2 module list
 
 # Check CUDA
 CUDA_VERSION="$(\
@@ -28,17 +29,17 @@ CUDA_VERSION="$(\
   | cut -d':' -f2 \
   | cut -d'-' -f1)";
 
-check "version" echo "$CUDA_VERSION" | grep '11.8.0'
-check "installed" stat /usr/local/cuda-11.8 /usr/local/cuda
-check "nvcc exists and is on path" which nvcc
+>&2 check "version" echo "$CUDA_VERSION" | grep '11.8.0'
+>&2 check "installed" stat /usr/local/cuda-11.8 /usr/local/cuda
+>&2 check "nvcc exists and is on path" which nvcc
 
 # Check LLVM
-check "version" grep "llvm-toolchain-$(lsb_release -cs) main" /etc/apt/sources.list{,.d/*.list}
+>&2 check "version" grep "llvm-toolchain-$(lsb_release -cs) main" /etc/apt/sources.list{,.d/*.list}
 
 # Check NVHPC
-check "version" echo "$NVHPC_VERSION" | grep '22.9'
-check "installed" stat /opt/nvidia/hpc_sdk
-check "nvc++ exists and is on path" which nvc++
+>&2 check "version" echo "$NVHPC_VERSION" | grep '22.9'
+>&2 check "installed" stat /opt/nvidia/hpc_sdk
+>&2 check "nvc++ exists and is on path" which nvc++
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.

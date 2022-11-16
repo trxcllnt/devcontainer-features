@@ -14,8 +14,8 @@ source dev-container-features-test-lib
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "version" grep "llvm-toolchain-$(lsb_release -cs) main" /etc/apt/sources.list{,.d/*.list}
+>&2 check "version" grep "llvm-toolchain-$(lsb_release -cs) main" /etc/apt/sources.list{,.d/*.list}
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.
-reportResults
+>&2 reportResults

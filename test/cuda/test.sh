@@ -25,10 +25,10 @@ CUDA_VERSION="$(\
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "version" echo "$CUDA_VERSION" | grep '11.8.0'
-check "installed" stat /usr/local/cuda-11.8 /usr/local/cuda
-check "nvcc exists and is on path" which nvcc
+>&2 check "version" echo "$CUDA_VERSION" | grep '11.8.0'
+>&2 check "installed" stat /usr/local/cuda-11.8 /usr/local/cuda
+>&2 check "nvcc exists and is on path" which nvcc
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.
-reportResults
+>&2 reportResults

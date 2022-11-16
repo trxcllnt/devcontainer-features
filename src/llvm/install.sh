@@ -22,7 +22,7 @@ tmpdir="$(mktemp -d)";
 wget -O $tmpdir/llvm-snapshot.asc https://apt.llvm.org/llvm-snapshot.gpg.key;
 
 find "$tmpdir" -type f -name '*.asc' -exec bash -c "gpg --dearmor -o \
-  /etc/apt/trusted.gpg.d/$(echo "{}" | sed s@$tmpdir/@@ | sed s@.asc@.gpg@) \
+  /etc/apt/trusted.gpg.d/\$(echo '{}' | sed s@$tmpdir/@@ | sed s@.asc@.gpg@) \
   {}" \;
 
 chmod 0644 /etc/apt/trusted.gpg.d/*.gpg || true;

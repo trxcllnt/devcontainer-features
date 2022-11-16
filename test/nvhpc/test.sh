@@ -16,6 +16,8 @@ cat "$HOME/.bashrc"
 
 source "$HOME/.bashrc"
 
+echo "$PATH"
+
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
 check "version" echo "$NVHPC_VERSION" | grep '22.9'

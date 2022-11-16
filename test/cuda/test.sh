@@ -16,6 +16,8 @@ cat "$HOME/.bashrc"
 
 source "$HOME/.bashrc"
 
+echo "$PATH"
+
 CUDA_VERSION="$(\
     apt policy cuda-compiler-11-8 2>/dev/null \
   | grep -E 'Candidate: (.*).*$' - \

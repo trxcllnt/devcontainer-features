@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-set -e
+set -ex
 
 echo "Installing LLVM prerequisites...";
 
@@ -36,8 +36,7 @@ fi
 
 # Install llvm apt repository
 apt-add-repository -y "\
-deb [arch=$(dpkg-architecture -q DEB_BUILD_ARCH)] \
-http://apt.llvm.org/$(lsb_release -cs)/ \
+deb http://apt.llvm.org/$(lsb_release -cs)/ \
 llvm-toolchain-$(lsb_release -cs)${llvm_ver:+"-$llvm_ver"} main";
 
 llvm_ver="$(\

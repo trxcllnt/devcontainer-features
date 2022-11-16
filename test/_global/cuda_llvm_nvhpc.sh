@@ -29,17 +29,17 @@ CUDA_VERSION="$(\
   | cut -d':' -f2 \
   | cut -d'-' -f1)";
 
->&2 check "version" echo "$CUDA_VERSION" | grep '11.8.0'
->&2 check "installed" stat /usr/local/cuda-11.8 /usr/local/cuda
->&2 check "nvcc exists and is on path" which nvcc
+check "version" echo "$CUDA_VERSION" | grep '11.8.0'
+check "installed" stat /usr/local/cuda-11.8 /usr/local/cuda
+check "nvcc exists and is on path" which nvcc
 
 # Check LLVM
->&2 check "version" grep "llvm-toolchain-$(lsb_release -cs) main" /etc/apt/sources.list{,.d/*.list}
+check "version" grep "llvm-toolchain-$(lsb_release -cs) main" /etc/apt/sources.list{,.d/*.list}
 
 # Check NVHPC
->&2 check "version" echo "$NVHPC_VERSION" | grep '22.9'
->&2 check "installed" stat /opt/nvidia/hpc_sdk
->&2 check "nvc++ exists and is on path" which nvc++
+check "version" echo "$NVHPC_VERSION" | grep '22.9'
+check "installed" stat /opt/nvidia/hpc_sdk
+check "nvc++ exists and is on path" which nvc++
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.

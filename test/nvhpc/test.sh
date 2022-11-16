@@ -20,10 +20,10 @@ source dev-container-features-test-lib
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
->&2 check "version" echo "$NVHPC_VERSION" | grep '22.9'
->&2 check "installed" stat /opt/nvidia/hpc_sdk
->&2 check "nvc++ exists and is on path" which nvc++
+check "version" echo "$NVHPC_VERSION" | grep '22.9'
+check "installed" stat /opt/nvidia/hpc_sdk
+check "nvc++ exists and is on path" which nvc++
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.
->&2 reportResults
+reportResults

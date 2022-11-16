@@ -12,10 +12,9 @@ set -ex
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib
 
-cat "$HOME/.bashrc"
-
-source "$HOME/.bashrc"
-
+echo "$BASH_ENV"
+cat "${BASH_ENV:-/etc/bash_env}"
+source "${BASH_ENV:-/etc/bash_env}"
 echo "$PATH"
 
 # Feature-specific tests

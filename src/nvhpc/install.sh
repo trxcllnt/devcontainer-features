@@ -66,8 +66,8 @@ EOF
 
 for x in "/etc/skel/.bashrc" \
          "/etc/skel/.profile" \
-         "${_CONTAINER_USER}/.bashrc" \
-         "${_CONTAINER_USER}/.profile"; do
+         "${_CONTAINER_USER_HOME}/.bashrc" \
+         "${_CONTAINER_USER_HOME}/.profile"; do
     cat <<EOF >> $x
 export NVHPC="${NVHPC}";
 export NVHPC_VERSION="${NVHPC_VERSION}";

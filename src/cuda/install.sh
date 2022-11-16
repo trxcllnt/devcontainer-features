@@ -47,15 +47,15 @@ apt install -y --no-install-recommends  \
     cuda-command-line-tools-${cuda_ver} \
     ;
 
-if [[ ! -L $CUDA_HOME ]]; then
+if [[ ! -L /usr/local/cuda ]]; then
     # Create /usr/local/cuda symlink
-    ln -s "$CUDA_HOME-${CUDAVERSION}" "$CUDA_HOME";
+    ln -s "/usr/local/cuda-${CUDAVERSION}" "/usr/local/cuda";
 fi
 
 for x in "/etc/skel/.bashrc" \
          "/etc/skel/.profile" \
-         "${_CONTAINER_USER}/.bashrc" \
-         "${_CONTAINER_USER}/.profile"; do
+         "${_CONTAINER_USER_HOME}/.bashrc" \
+         "${_CONTAINER_USER_HOME}/.profile"; do
     cat <<EOF >> "$x"
 export CUDA_HOME="/usr/local/cuda";
 export PATH="/usr/local/nvidia/bin:$CUDA_HOME/bin:${PATH:+$PATH:}";

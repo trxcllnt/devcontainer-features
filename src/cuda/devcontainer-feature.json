@@ -1,0 +1,22 @@
+{
+    "name": "CUDA Toolkit",
+    "id": "cuda-toolkit",
+    "version": "1.0.0",
+    "description": "A feature to install the NVIDIA CUDA Toolkit",
+    "options": {
+        "cudaVersion": {
+            "type": "string",
+            "proposals": [
+                "11.8",
+                "11.7",
+                "11.6",
+                "11.5",
+                "11.4",
+                "11.3",
+                "11.2"
+            ],
+            "default": "11.8",
+            "description": "Version of the CUDA Toolkit to install."
+        }
+    }
+}

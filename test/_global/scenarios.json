@@ -1,12 +1,15 @@
 {
-    "color_and_hello": {
+    "cuda_llvm_nvhpc": {
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
         "features": {
-            "color": {
-                "favorite": "purple"
+            "cuda": {
+                "cudaVersion": "11.8"
             },
-            "hello": {
-                "greeting": "Greetings"
+            "llvm": {
+                "llvmVersion": "dev"
+            },
+            "nvhpc": {
+                "nvhpcVersion": "22.9"
             }
         }
     }

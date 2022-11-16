@@ -13,8 +13,9 @@ jobs:
     strategy:
       matrix:
         features:
-          - color
-          - hello
+          - cuda
+          - llvm
+          - nvhpc
         baseImage:
           - debian:latest
           - ubuntu:latest

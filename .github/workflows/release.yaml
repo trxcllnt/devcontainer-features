@@ -9,18 +9,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: "Publish Features"
+      - id: publish_features
+        name: "Publish Features"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: devcontainers/action@v1
         with:
           publish-features: "true"
           base-path-to-features: "./src"
           generate-docs: "true"
-          
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create PR for Documentation
-        id: push_image_info
+      - id: push_image_info
+        name: Create PR for Documentation
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

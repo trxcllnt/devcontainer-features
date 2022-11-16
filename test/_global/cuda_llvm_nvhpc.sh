@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 
 # The 'test/_global' folder is a special test folder that is not tied to a single feature.
 #
@@ -7,7 +7,7 @@
 #
 # The value of a scenarios element is any properties available in the 'devcontainer.json'.
 # Scenarios are useful for testing specific options in a feature, or to test a combination of features.
-# 
+#
 # This test can be run with the following command (from the root of this repo)
 #    devcontainer features test --global-scenarios-only .
 
@@ -16,17 +16,18 @@ set -e
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib
 
-echo -e "The result of the 'color' command will be:\n"
-color
-echo -e "The result of the 'hello' command will be:\n"
-hello
-echo -e "\n"
+# Check CUDA
+check "version" echo $CUDA_VERSION | grep '11.8.0'
+check "installed" stat /usr/local/cuda-11.8 /usr/local/cuda
+check "nvcc exists and is on path" which nvcc
 
-# Feature-specific tests
-# The 'check' command comes from the dev-container-features-test-lib.
-check "check purple is my favorite color" color | grep 'my favorite color is purple'
-check "check I am greeting with 'Greetings'" hello | grep 'Greetings, root'
+# Check LLVM
+check "version" cat /etc/apt/sources.list | grep 'llvm-toolchain-$(lsb_release -cs) main'
 
+# Check NVHPC
+check "version" echo $NVHPC_VERSION | grep '22.9'
+check "installed" stat /opt/nvidia/hpc_sdk
+check "nvc++ exists and is on path" which nvc++
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.

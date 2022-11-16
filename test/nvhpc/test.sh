@@ -7,7 +7,7 @@
 #     --base-image mcr.microsoft.com/devcontainers/base:ubuntu .'
 # ```
 
-set -e
+set -ex
 
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib

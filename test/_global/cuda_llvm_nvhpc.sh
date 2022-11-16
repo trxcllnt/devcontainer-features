@@ -11,7 +11,7 @@
 # This test can be run with the following command (from the root of this repo)
 #    devcontainer features test --global-scenarios-only .
 
-set -e
+set -ex
 
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib

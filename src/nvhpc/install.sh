@@ -41,11 +41,11 @@ apt install -y --no-install-recommends  \
 
 nvhpc_ver=${NVHPCVERSION}
 
-export NVHPC="/opt/nvidia/hpc_sdk"
-export NVHPC_VERSION="${nvhpc_ver}"
-export NVHPC_ROOT="${NVHPC}/Linux_$(uname -m)/${nvhpc_ver}"
-export NVHPC_CUDA_HOME="${CUDA_HOME:-/usr/local/cuda}"
-export MODULEPATH="${NVHPC}/modulefiles:${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles"
+NVHPC="/opt/nvidia/hpc_sdk"
+NVHPC_VERSION="${nvhpc_ver}"
+NVHPC_ROOT="${NVHPC}/Linux_$(uname -m)/${nvhpc_ver}"
+NVHPC_CUDA_HOME="${CUDA_HOME:-/usr/local/cuda}"
+MODULEPATH="${NVHPC}/modulefiles:${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles"
 
 bash "${NVHPC_ROOT}/compilers/bin/makelocalrc" \
     -x "${NVHPC_ROOT}/compilers/bin" \
@@ -67,8 +67,8 @@ EOF
 for x in {/etc/skel,${_CONTAINER_USER_HOME}}/.bashrc; do
     cat <<EOF >> $x
 export NVHPC="${NVHPC}";
-export NVHPC_VERSION="${NVHPC_VERSION}";
 export NVHPC_ROOT="${NVHPC_ROOT}";
+export NVHPC_VERSION="${NVHPC_VERSION}";
 export NVHPC_CUDA_HOME="${NVHPC_CUDA_HOME}";
 export MODULEPATH="${MODULEPATH}";
 EOF

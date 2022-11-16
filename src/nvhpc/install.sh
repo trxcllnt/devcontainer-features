@@ -54,15 +54,23 @@ bash "${NVHPC_ROOT}/compilers/bin/makelocalrc" \
     -g77 "$(which gfortran)"
 
 # Install NVHPC modules
-rm -rf /usr/share/lmod/lmod/modulefiles;
-ln -sf "${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles" /usr/share/lmod/lmod/modulefiles;
+# rm -rf /usr/share/lmod/lmod/modulefiles;
+# ln -sf "${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles" /usr/share/lmod/lmod/modulefiles;
+
+module use "${MODULEPATH}";
+module try-load nvhpc-nompi/${NVHPC_VERSION};
+module try-load hpcx-mt;
+module try-load hpcx;
 
 cat <<EOF > /etc/profile.d/z-nvhpc-modules.sh
 #! /usr/bin/env bash
+module use "${MODULEPATH}";
 module try-load nvhpc-nompi/${NVHPC_VERSION};
 module try-load hpcx-mt;
 module try-load hpcx;
 EOF
+
+chmod +x /etc/profile.d/z-nvhpc-modules.sh;
 
 for x in {/etc/skel,${_CONTAINER_USER_HOME}}/.bashrc; do
     cat <<EOF >> $x
@@ -70,11 +78,8 @@ export NVHPC="${NVHPC}";
 export NVHPC_ROOT="${NVHPC_ROOT}";
 export NVHPC_VERSION="${NVHPC_VERSION}";
 export NVHPC_CUDA_HOME="${NVHPC_CUDA_HOME}";
-export MODULEPATH="${MODULEPATH}";
 EOF
 done
-
-chmod +x /etc/profile.d/z-nvhpc-modules.sh;
 
 cat <<EOF > "/etc/bash_env"
 #! /usr/bin/env bash

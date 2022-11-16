@@ -12,9 +12,9 @@ set -ex
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib
 
-cat ${_CONTAINER_USER_HOME}/.bashrc
+cat "$HOME/.bashrc"
 
-source ${_CONTAINER_USER_HOME}/.bashrc
+source "$HOME/.bashrc"
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.

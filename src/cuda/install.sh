@@ -59,7 +59,7 @@ for x in "/etc/skel/.bashrc" \
     cat <<EOF >> "$x"
 export CUDA_HOME="/usr/local/cuda";
 export PATH="/usr/local/nvidia/bin:$CUDA_HOME/bin:${PATH:+$PATH:}";
-export LIBRARY_PATH="${LIBRARY_PATH:+$LIBRARY_PATH:}$CUDA_HOME/lib64/stubs;
+export LIBRARY_PATH="${LIBRARY_PATH:+$LIBRARY_PATH:}$CUDA_HOME/lib64/stubs";
 EOF
 done
 

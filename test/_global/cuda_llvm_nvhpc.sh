@@ -18,7 +18,7 @@ source dev-container-features-test-lib
 
 # Check CUDA
 CUDA_VERSION="$(\
-    apt policy cuda-compiler-${cuda_ver} 2>/dev/null \
+    apt policy cuda-compiler-11-8 2>/dev/null \
   | grep -E 'Candidate: (.*).*$' - \
   | cut -d':' -f2 \
   | cut -d'-' -f1)";

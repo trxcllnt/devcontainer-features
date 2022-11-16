@@ -57,14 +57,46 @@ bash "${NVHPC_ROOT}/compilers/bin/makelocalrc" \
 rm -rf /usr/share/lmod/lmod/modulefiles;
 ln -sf "${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles" /usr/share/lmod/lmod/modulefiles;
 
-cat <<EOF2 > /etc/profile.d/z-nvhpc-modules.sh
+cat <<EOF > /etc/profile.d/z-nvhpc-modules.sh
 #! /usr/bin/env bash
 module try-load nvhpc-nompi/${NVHPC_VERSION};
 module try-load hpcx-mt;
 module try-load hpcx;
-EOF2
+EOF
+
+for x in "/etc/skel/.bashrc" \
+         "/etc/skel/.profile" \
+         "${_CONTAINER_USER}/.bashrc" \
+         "${_CONTAINER_USER}/.profile"; do
+    cat <<EOF >> $x
+export NVHPC="${NVHPC}";
+export NVHPC_VERSION="${NVHPC_VERSION}";
+export NVHPC_ROOT="${NVHPC_ROOT}";
+export NVHPC_CUDA_HOME="${NVHPC_CUDA_HOME}";
+export MODULEPATH="${MODULEPATH}";
+EOF
+done
 
 chmod +x /etc/profile.d/z-nvhpc-modules.sh;
+
+cat <<EOF > "/etc/bash_env"
+#! /usr/bin/env bash
+
+# Make non-interactive/non-login shells behave like interactive login shells
+if ! shopt -q login_shell; then
+    if [ -f /etc/profile ]; then
+        . /etc/profile
+    fi
+    for x in $HOME/.{bash_profile,bash_login,profile}; do
+        if [ -f $x ]; then
+            . $x
+            break
+        fi
+    done
+fi
+EOF
+
+chmod +x /etc/bash_env
 
 rm -rf /var/tmp/* \
        /var/cache/apt/* \

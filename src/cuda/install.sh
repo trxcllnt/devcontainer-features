@@ -52,6 +52,36 @@ if [[ ! -L $CUDA_HOME ]]; then
     ln -s "$CUDA_HOME-${CUDAVERSION}" "$CUDA_HOME";
 fi
 
+for x in "/etc/skel/.bashrc" \
+         "/etc/skel/.profile" \
+         "${_CONTAINER_USER}/.bashrc" \
+         "${_CONTAINER_USER}/.profile"; do
+    cat <<EOF >> "$x"
+export CUDA_HOME="/usr/local/cuda";
+export PATH="/usr/local/nvidia/bin:$CUDA_HOME/bin:${PATH:+$PATH:}";
+export LIBRARY_PATH="${LIBRARY_PATH:+$LIBRARY_PATH:}$CUDA_HOME/lib64/stubs;
+EOF
+done
+
+cat <<EOF > "/etc/bash_env"
+#! /usr/bin/env bash
+
+# Make non-interactive/non-login shells behave like interactive login shells
+if ! shopt -q login_shell; then
+    if [ -f /etc/profile ]; then
+        . /etc/profile
+    fi
+    for x in $HOME/.{bash_profile,bash_login,profile}; do
+        if [ -f $x ]; then
+            . $x
+            break
+        fi
+    done
+fi
+EOF
+
+chmod +x /etc/bash_env
+
 rm -rf /var/tmp/* \
        /var/cache/apt/* \
        /var/lib/apt/lists/*;

@@ -20,8 +20,6 @@
         }
     },
     "containerEnv": {
-        "CUDA_HOME": "/usr/local/cuda",
-        "PATH": "/usr/local/nvidia/bin:$CUDA_HOME/bin:${PATH:+$PATH:}",
-        "LIBRARY_PATH": "${LIBRARY_PATH:+$LIBRARY_PATH:}$CUDA_HOME/lib64/stubs"
+        "BASH_ENV": "/etc/bash_env"
     }
 }

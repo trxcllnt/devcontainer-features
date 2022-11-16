@@ -14,7 +14,7 @@ source dev-container-features-test-lib
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "version" echo $CUDA_VERSION | grep '11.8.0'
+check "version" echo "$CUDA_VERSION" | grep '11.8.0'
 check "installed" stat /usr/local/cuda-11.8 /usr/local/cuda
 check "nvcc exists and is on path" which nvcc
 

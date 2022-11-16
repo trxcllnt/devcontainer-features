@@ -14,7 +14,7 @@ source dev-container-features-test-lib
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "version" echo $NVHPC_VERSION | grep '22.9'
+check "version" echo "$NVHPC_VERSION" | grep '22.9'
 check "installed" stat /opt/nvidia/hpc_sdk
 check "nvc++ exists and is on path" which nvc++
 

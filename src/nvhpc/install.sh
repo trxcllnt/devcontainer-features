@@ -12,6 +12,7 @@ apt install -y --no-install-recommends \
     gpg                                \
     lmod                               \
     wget                               \
+    dpkg-dev                           \
     apt-utils                          \
     lsb-release                        \
     ca-certificates                    \

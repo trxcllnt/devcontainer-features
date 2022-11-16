@@ -57,11 +57,6 @@ bash "${NVHPC_ROOT}/compilers/bin/makelocalrc" \
 # rm -rf /usr/share/lmod/lmod/modulefiles;
 # ln -sf "${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles" /usr/share/lmod/lmod/modulefiles;
 
-module use "${MODULEPATH}";
-module try-load nvhpc-nompi/${NVHPC_VERSION};
-module try-load hpcx-mt;
-module try-load hpcx;
-
 cat <<EOF > /etc/profile.d/z-nvhpc-modules.sh
 #! /usr/bin/env bash
 module use "${MODULEPATH}";

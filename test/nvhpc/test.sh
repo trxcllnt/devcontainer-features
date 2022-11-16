@@ -12,6 +12,10 @@ set -ex
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib
 
+cat ${_CONTAINER_USER_HOME}/.bashrc
+
+source ${_CONTAINER_USER_HOME}/.bashrc
+
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
 check "version" echo "$NVHPC_VERSION" | grep '22.9'

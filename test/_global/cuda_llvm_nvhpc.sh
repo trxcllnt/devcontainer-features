@@ -16,6 +16,10 @@ set -ex
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib
 
+cat ${_CONTAINER_USER_HOME}/.bashrc
+
+source ${_CONTAINER_USER_HOME}/.bashrc
+
 # Check CUDA
 CUDA_VERSION="$(\
     apt policy cuda-compiler-11-8 2>/dev/null \

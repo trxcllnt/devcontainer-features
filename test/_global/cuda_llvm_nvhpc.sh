@@ -17,15 +17,21 @@ set -ex
 source dev-container-features-test-lib
 
 # Check CUDA
-check "version" echo $CUDA_VERSION | grep '11.8.0'
+CUDA_VERSION="$(\
+    apt policy cuda-compiler-${cuda_ver} 2>/dev/null \
+  | grep -E 'Candidate: (.*).*$' - \
+  | cut -d':' -f2 \
+  | cut -d'-' -f1)";
+
+check "version" echo "$CUDA_VERSION" | grep '11.8.0'
 check "installed" stat /usr/local/cuda-11.8 /usr/local/cuda
 check "nvcc exists and is on path" which nvcc
 
 # Check LLVM
-check "version" cat /etc/apt/sources.list | grep 'llvm-toolchain-$(lsb_release -cs) main'
+check "version" grep "llvm-toolchain-$(lsb_release -cs) main" /etc/apt/sources.list{,.d/*.list}
 
 # Check NVHPC
-check "version" echo $NVHPC_VERSION | grep '22.9'
+check "version" echo "$NVHPC_VERSION" | grep '22.9'
 check "installed" stat /opt/nvidia/hpc_sdk
 check "nvc++ exists and is on path" which nvc++
 

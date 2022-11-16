@@ -12,10 +12,10 @@ set -ex
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib
 
-echo "$BASH_ENV"
-cat "${BASH_ENV:-/etc/bash_env}"
-source "${BASH_ENV:-/etc/bash_env}"
-echo "$PATH"
+>&2 echo "BASH_ENV=$BASH_ENV"
+>&2 cat "${BASH_ENV:-/etc/bash_env}"
+>&2 source "${BASH_ENV:-/etc/bash_env}"
+>&2 echo "PATH=$PATH"
 
 CUDA_VERSION="$(\
     apt policy cuda-compiler-11-8 2>/dev/null \

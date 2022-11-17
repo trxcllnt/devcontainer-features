@@ -60,9 +60,9 @@ ln -sf "${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles" /usr/share/lmod/lmod/mo
 cat <<EOF > /etc/profile.d/z-nvhpc-modules.sh
 #! /usr/bin/env bash
 module use "${NVHPC_MODULEPATH}";
-module load nvhpc-nompi/${NVHPC_VERSION};
-module load hpcx-mt;
-module load hpcx;
+module try-load nvhpc-nompi/${NVHPC_VERSION};
+module try-load hpcx-mt;
+module try-load hpcx;
 EOF
 
 chmod +x /etc/profile.d/z-nvhpc-modules.sh;

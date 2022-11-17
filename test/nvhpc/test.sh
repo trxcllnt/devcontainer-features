@@ -19,10 +19,21 @@ source dev-container-features-test-lib
 >&2 echo "NVHPC_MODULEPATH=$NVHPC_MODULEPATH"
 ls -all "$NVHPC_ROOT"/ 1>&2
 
+ls -l "$NVHPC"/modulefiles/*
+
 >&2 echo "BASH_ENV=$BASH_ENV"
 >&2 echo "PATH=$PATH"
+module list 1>&2
+
 module use "$NVHPC_MODULEPATH"
 module list 1>&2
+
+module try-load nvhpc-nompi/${NVHPC_VERSION} 1>&2
+module try-load hpcx-mt 1>&2
+module try-load hpcx 1>&2
+module list 1>&2
+
+>&2 echo "PATH=$PATH"
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.

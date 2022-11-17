@@ -7,9 +7,7 @@ A feature to install the NVHPC SDK
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/nvhpc:1": {
-        "version": "latest"
-    }
+    "ghcr.io/trxcllnt/devcontainer-features/nvhpc-sdk:1": {}
 }
 ```
 

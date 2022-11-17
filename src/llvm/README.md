@@ -1,5 +1,5 @@
 
-# LLVM (llvm)
+# LLVM compilers and tools (llvm)
 
 A feature to install LLVM compilers and tools
 
@@ -7,9 +7,7 @@ A feature to install LLVM compilers and tools
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/llvm:1": {
-        "version": "latest"
-    }
+    "ghcr.io/trxcllnt/devcontainer-features/llvm:1": {}
 }
 ```
 

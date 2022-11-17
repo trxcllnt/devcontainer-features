@@ -16,12 +16,10 @@ source dev-container-features-test-lib
 >&2 echo "NVHPC_ROOT=$NVHPC_ROOT"
 >&2 echo "NVHPC_VERSION=$NVHPC_VERSION"
 >&2 echo "NVHPC_CUDA_HOME=$NVHPC_CUDA_HOME"
->&2 echo "MODULEPATH=$MODULEPATH"
 ls -all "$NVHPC_ROOT"/ 1>&2
 
 >&2 echo "BASH_ENV=$BASH_ENV"
 >&2 echo "PATH=$PATH"
-module use "$MODULEPATH" 1>&2
 module list 1>&2
 
 # Feature-specific tests

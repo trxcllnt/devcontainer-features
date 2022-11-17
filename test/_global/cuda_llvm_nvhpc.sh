@@ -20,12 +20,10 @@ source dev-container-features-test-lib
 >&2 echo "NVHPC_ROOT=$NVHPC_ROOT"
 >&2 echo "NVHPC_VERSION=$NVHPC_VERSION"
 >&2 echo "NVHPC_CUDA_HOME=$NVHPC_CUDA_HOME"
->&2 echo "NVHPC_MODULEPATH=$NVHPC_MODULEPATH"
 ls -all "$NVHPC_ROOT"/ 1>&2
 
 >&2 echo "BASH_ENV=$BASH_ENV"
 >&2 echo "PATH=$PATH"
-module use "$NVHPC_MODULEPATH"
 module list 1>&2
 
 # Check CUDA
@@ -43,7 +41,7 @@ check "nvcc exists and is on path" which nvcc
 check "version" grep "llvm-toolchain-$(lsb_release -cs) main" /etc/apt/sources.list{,.d/*.list}
 
 # Check NVHPC
-check "version" echo "$NVHPC_VERSION" | grep '22.9'
+check "version" echo "$NVHPC_VERSION" | grep '22.11'
 check "installed" stat /opt/nvidia/hpc_sdk
 check "nvc++ exists and is on path" which nvc++
 

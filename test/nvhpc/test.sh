@@ -16,28 +16,15 @@ source dev-container-features-test-lib
 >&2 echo "NVHPC_ROOT=$NVHPC_ROOT"
 >&2 echo "NVHPC_VERSION=$NVHPC_VERSION"
 >&2 echo "NVHPC_CUDA_HOME=$NVHPC_CUDA_HOME"
->&2 echo "NVHPC_MODULEPATH=$NVHPC_MODULEPATH"
 ls -all "$NVHPC_ROOT"/ 1>&2
-
-ls -l "$NVHPC"/modulefiles/*
 
 >&2 echo "BASH_ENV=$BASH_ENV"
 >&2 echo "PATH=$PATH"
 module list 1>&2
 
-module use "$NVHPC_MODULEPATH"
-module list 1>&2
-
-module try-load nvhpc-nompi/${NVHPC_VERSION} 1>&2
-module try-load hpcx-mt 1>&2
-module try-load hpcx 1>&2
-module list 1>&2
-
->&2 echo "PATH=$PATH"
-
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "version" echo "$NVHPC_VERSION" | grep '22.9'
+check "version" echo "$NVHPC_VERSION" | grep '22.11'
 check "installed" stat /opt/nvidia/hpc_sdk
 check "nvc++ exists and is on path" which nvc++
 

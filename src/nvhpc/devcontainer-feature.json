@@ -7,10 +7,11 @@
         "nvhpcVersion": {
             "type": "string",
             "proposals": [
+                "22.11",
                 "22.9",
                 "22.7"
             ],
-            "default": "22.9",
+            "default": "22.11",
             "description": "Version of NVHPC SDK to install."
         }
     },

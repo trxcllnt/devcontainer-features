@@ -45,7 +45,6 @@ NVHPC="/opt/nvidia/hpc_sdk"
 NVHPC_VERSION="${nvhpc_ver}"
 NVHPC_ROOT="${NVHPC}/Linux_$(uname -m)/${nvhpc_ver}"
 NVHPC_CUDA_HOME="${CUDA_HOME:-/usr/local/cuda}"
-NVHPC_MODULEPATH="${NVHPC}/modulefiles:${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles"
 
 bash "${NVHPC_ROOT}/compilers/bin/makelocalrc" \
     -x "${NVHPC_ROOT}/compilers/bin" \
@@ -59,8 +58,10 @@ ln -sf "${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles" /usr/share/lmod/lmod/mo
 
 cat <<EOF > /etc/profile.d/z-nvhpc-modules.sh
 #! /usr/bin/env bash
-module use "${NVHPC_MODULEPATH}";
+module use "${NVHPC}/modulefiles";
+module use "${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles";
 module try-load nvhpc-nompi/${NVHPC_VERSION};
+module try-load nvhpc-nompi;
 module try-load hpcx-mt;
 module try-load hpcx;
 EOF
@@ -73,7 +74,6 @@ export NVHPC="${NVHPC}";
 export NVHPC_ROOT="${NVHPC_ROOT}";
 export NVHPC_VERSION="${NVHPC_VERSION}";
 export NVHPC_CUDA_HOME="${NVHPC_CUDA_HOME}";
-export NVHPC_MODULEPATH="${NVHPC_MODULEPATH}";
 EOF
 done
 

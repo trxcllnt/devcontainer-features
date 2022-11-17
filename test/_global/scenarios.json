@@ -9,7 +9,7 @@
                 "llvmVersion": "dev"
             },
             "nvhpc": {
-                "nvhpcVersion": "22.9"
+                "nvhpcVersion": "22.11"
             }
         }
     }

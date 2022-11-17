@@ -17,7 +17,7 @@ A feature to install the NVHPC SDK
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| nvhpcVersion | Version of NVHPC SDK to install. | string | 22.9 |
+| nvhpcVersion | Version of NVHPC SDK to install. | string | 22.11 |
 
 
 

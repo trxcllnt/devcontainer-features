@@ -1,5 +1,5 @@
 
-# NVHPC SDK (nvhpc-sdk)
+# NVHPC SDK (nvhpc)
 
 A feature to install the NVHPC SDK
 
@@ -7,7 +7,7 @@ A feature to install the NVHPC SDK
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/nvhpc-sdk:1": {}
+    "ghcr.io/trxcllnt/devcontainer-features/nvhpc:1": {}
 }
 ```
 

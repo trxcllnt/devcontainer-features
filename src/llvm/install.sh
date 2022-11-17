@@ -46,7 +46,9 @@ llvm_ver="$(\
   | cut -d'.' -f1)";
 
 DEBIAN_FRONTEND=noninteractive                                      \
-apt install -y --no-install-recommends                              \
+apt install                                                         \
+    -y --no-install-recommends                                      \
+    -o Dpkg::Options::="--force-overwrite"                          \
     `# LLVM and Clang`                                              \
     {clang-tools,python3-clang}-${llvm_ver}                         \
     {libc++,libc++abi,libclang,liblldb,libomp,llvm}-${llvm_ver}-dev \

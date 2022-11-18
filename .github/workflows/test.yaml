@@ -20,7 +20,9 @@ jobs:
           - cmake
           - cuda
           - llvm
+          - ninja
           - nvhpc
+          - sccache
         baseImage:
           # - debian:latest
           - ubuntu:latest

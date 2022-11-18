@@ -45,10 +45,20 @@ check "nvcc exists and is on path" which nvcc
 # Check LLVM
 check "version" grep "llvm-toolchain-$(lsb_release -cs) main" /etc/apt/sources.list{,.d/*.list}
 
+# Check ninja
+NINJA_VERSION="$(wget -O- -q https://api.github.com/repos/ninja-build/ninja/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+check "ninja exists and is on path" which ninja
+check "version" ninja --version | grep "$NINJA_VERSION"
+
 # Check NVHPC
 check "version" echo "$NVHPC_VERSION" | grep '22.11'
 check "installed" stat /opt/nvidia/hpc_sdk
 check "nvc++ exists and is on path" which nvc++
+
+# Check ninja
+SCCACHE_VERSION="$(wget -O- -q https://api.github.com/repos/mozilla/sccache/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+check "sccache exists and is on path" which sccache
+check "version" sccache --version | grep "$SCCACHE_VERSION"
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.

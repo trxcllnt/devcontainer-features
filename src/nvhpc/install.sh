@@ -56,7 +56,7 @@ nvhpc_ver=${NVHPCVERSION}
 
 NVHPC="/opt/nvidia/hpc_sdk"
 NVHPC_VERSION="${nvhpc_ver}"
-NVHPC_ROOT="${NVHPC}/Linux_$(uname -m)/${nvhpc_ver}"
+NVHPC_ROOT="${NVHPC}/Linux_$(uname -p)/${nvhpc_ver}"
 NVHPC_CUDA_HOME="${CUDA_HOME:-/usr/local/cuda}"
 
 bash "${NVHPC_ROOT}/compilers/bin/makelocalrc" \

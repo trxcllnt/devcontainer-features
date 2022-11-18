@@ -15,7 +15,7 @@ A feature to install CMake
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| cmakeVersion | CMake version to install. | string | dev |
+| cmakeVersion | CMake version to install. | string | latest |
 
 
 

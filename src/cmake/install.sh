@@ -44,4 +44,7 @@ echo "Installing CMake...";
 # Install CMake
 bash /tmp/cmake_${CMAKE_VERSION}.sh --skip-license --exclude-subdir --prefix=/usr
 
-rm /tmp/cmake_${CMAKE_VERSION}.sh;
+rm -rf /var/tmp/* \
+       /var/cache/apt/* \
+       /var/lib/apt/lists/* \
+       /tmp/cmake_${CMAKE_VERSION}.sh;

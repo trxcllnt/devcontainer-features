@@ -37,11 +37,12 @@ if [ $NINJA_VERSION == latest ]; then
 fi
 
 # Install Ninja
-wget -O- -q \
-    https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/ninja-linux.zip \
-  | busybox unzip -d /usr/bin - \
- && chmod +x /usr/bin/ninja
+wget -O /tmp/ninja-linux.zip -q \
+    https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/ninja-linux.zip
+unzip -d /usr/bin /tmp/ninja-linux.zip
+chmod +x /usr/bin/ninja
 
 rm -rf /var/tmp/* \
        /var/cache/apt/* \
-       /var/lib/apt/lists/*;
+       /var/lib/apt/lists/* \
+       /tmp/ninja-linux.zip;

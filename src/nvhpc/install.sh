@@ -28,6 +28,7 @@ check_packages                  \
     dpkg-dev                    \
     apt-utils                   \
     lsb-release                 \
+    bash-completion             \
     ca-certificates             \
     apt-transport-https         \
     software-properties-common  \

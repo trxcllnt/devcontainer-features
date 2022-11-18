@@ -24,6 +24,7 @@ check_packages                  \
     wget                        \
     apt-utils                   \
     lsb-release                 \
+    bash-completion             \
     ca-certificates             \
     apt-transport-https         \
     software-properties-common  \

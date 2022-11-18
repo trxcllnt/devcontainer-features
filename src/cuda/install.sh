@@ -19,7 +19,7 @@ check_packages() {
     fi
 }
 
-check_packages wget ca-certificates
+check_packages wget ca-certificates bash-completion
 
 echo "Downloading CUDA keyring...";
 

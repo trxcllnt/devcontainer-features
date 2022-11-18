@@ -25,7 +25,7 @@ if dpkg -s ninja-build > /dev/null 2>&1; then
     apt-get autoremove -y;
 fi
 
-check_packages wget unzip ca-certificates
+check_packages wget unzip ca-certificates bash-completion
 
 echo "Installing ninja-build...";
 

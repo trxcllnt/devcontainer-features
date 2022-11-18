@@ -1,19 +1,32 @@
 #! /usr/bin/env bash
 set -ex
 
-echo "Installing LLVM prerequisites...";
+apt_get_update()
+{
+    if [ "$(find /var/lib/apt/lists/* | wc -l)" = "0" ]; then
+        echo "Running apt-get update..."
+        apt-get update -y;
+    fi
+}
 
-apt update;
+# Checks if packages are installed and installs them if not
+check_packages() {
+    if ! dpkg -s "$@" > /dev/null 2>&1; then
+        apt_get_update
+        echo "Installing prerequisites: $@";
+        DEBIAN_FRONTEND=noninteractive \
+        apt-get -y install --no-install-recommends "$@"
+    fi
+}
 
-DEBIAN_FRONTEND=noninteractive         \
-apt install -y --no-install-recommends \
-    gpg                                \
-    wget                               \
-    apt-utils                          \
-    lsb-release                        \
-    ca-certificates                    \
-    apt-transport-https                \
-    software-properties-common         \
+check_packages                  \
+    gpg                         \
+    wget                        \
+    apt-utils                   \
+    lsb-release                 \
+    ca-certificates             \
+    apt-transport-https         \
+    software-properties-common  \
     ;
 
 echo "Downloading LLVM gpg key...";
@@ -40,14 +53,13 @@ deb http://apt.llvm.org/$(lsb_release -cs)/ \
 llvm-toolchain-$(lsb_release -cs)${llvm_ver:+"-$llvm_ver"} main";
 
 llvm_ver="$(\
-    apt policy llvm 2>/dev/null \
+    apt-cache policy llvm 2>/dev/null \
   | grep -E 'Candidate: 1:(.*).*$' - \
   | cut -d':' -f3 \
   | cut -d'.' -f1)";
 
 DEBIAN_FRONTEND=noninteractive                                      \
-apt install                                                         \
-    -y --no-install-recommends                                      \
+apt-get install -y --no-install-recommends                          \
     -o Dpkg::Options::="--force-overwrite"                          \
     `# LLVM and Clang`                                              \
     {clang-tools,python3-clang}-${llvm_ver}                         \

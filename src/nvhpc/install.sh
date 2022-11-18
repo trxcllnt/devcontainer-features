@@ -3,21 +3,34 @@ set -ex
 
 nvhpc_ver=${NVHPCVERSION/./-}
 
-echo "Installing NVHPC prerequisites...";
+apt_get_update()
+{
+    if [ "$(find /var/lib/apt/lists/* | wc -l)" = "0" ]; then
+        echo "Running apt-get update..."
+        apt-get update -y;
+    fi
+}
 
-apt update;
+# Checks if packages are installed and installs them if not
+check_packages() {
+    if ! dpkg -s "$@" > /dev/null 2>&1; then
+        apt_get_update
+        echo "Installing prerequisites: $@";
+        DEBIAN_FRONTEND=noninteractive \
+        apt-get -y install --no-install-recommends "$@"
+    fi
+}
 
-DEBIAN_FRONTEND=noninteractive         \
-apt install -y --no-install-recommends \
-    gpg                                \
-    lmod                               \
-    wget                               \
-    dpkg-dev                           \
-    apt-utils                          \
-    lsb-release                        \
-    ca-certificates                    \
-    apt-transport-https                \
-    software-properties-common         \
+check_packages                  \
+    gpg                         \
+    lmod                        \
+    wget                        \
+    dpkg-dev                    \
+    apt-utils                   \
+    lsb-release                 \
+    ca-certificates             \
+    apt-transport-https         \
+    software-properties-common  \
     ;
 
 echo "Downloading NVHPC gpg key...";
@@ -34,9 +47,9 @@ apt-add-repository -y "deb https://developer.download.nvidia.com/hpc-sdk/ubuntu/
 
 echo "Installing NVHPC SDK..."
 
-DEBIAN_FRONTEND=noninteractive          \
-apt install -y --no-install-recommends  \
-    nvhpc-${nvhpc_ver}                  \
+DEBIAN_FRONTEND=noninteractive              \
+apt-get install -y --no-install-recommends  \
+    nvhpc-${nvhpc_ver}                      \
     ;
 
 nvhpc_ver=${NVHPCVERSION}

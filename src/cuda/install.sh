@@ -1,18 +1,29 @@
 #! /usr/bin/env bash
 set -ex
 
-echo "Installing CUDA prerequisites...";
+apt_get_update()
+{
+    if [ "$(find /var/lib/apt/lists/* | wc -l)" = "0" ]; then
+        echo "Running apt-get update..."
+        apt-get update -y;
+    fi
+}
 
-apt update;
+# Checks if packages are installed and installs them if not
+check_packages() {
+    if ! dpkg -s "$@" > /dev/null 2>&1; then
+        apt_get_update
+        echo "Installing prerequisites: $@";
+        DEBIAN_FRONTEND=noninteractive \
+        apt-get -y install --no-install-recommends "$@"
+    fi
+}
 
-DEBIAN_FRONTEND=noninteractive          \
-apt install -y --no-install-recommends  \
-    wget ca-certificates                \
-    ;
+check_packages wget ca-certificates
 
 echo "Downloading CUDA keyring...";
 
-nv_arch="$(uname -m)";
+nv_arch="$(uname -p)";
 
 if [[ "$nv_arch" == aarch64 ]]; then
     nv_arch="sbsa";
@@ -28,23 +39,23 @@ ${nv_arch}/cuda-keyring_1.0-1_all.deb"
 
 dpkg -i cuda-keyring_1.0-1_all.deb;
 
-apt update;
+apt-get update;
 
 echo "Installing minimal CUDA toolkit..."
 
 cuda_ver=${CUDAVERSION/./-}
 
-DEBIAN_FRONTEND=noninteractive          \
-apt install -y --no-install-recommends  \
-    libnccl-dev                         \
-    gds-tools-${cuda_ver}               \
-    cuda-compat-${cuda_ver}             \
-    cuda-nvml-dev-${cuda_ver}           \
-    cuda-compiler-${cuda_ver}           \
-    cuda-libraries-${cuda_ver}          \
-    cuda-libraries-dev-${cuda_ver}      \
-    cuda-minimal-build-${cuda_ver}      \
-    cuda-command-line-tools-${cuda_ver} \
+DEBIAN_FRONTEND=noninteractive              \
+apt-get install -y --no-install-recommends  \
+    libnccl-dev                             \
+    gds-tools-${cuda_ver}                   \
+    cuda-compat-${cuda_ver}                 \
+    cuda-nvml-dev-${cuda_ver}               \
+    cuda-compiler-${cuda_ver}               \
+    cuda-libraries-${cuda_ver}              \
+    cuda-libraries-dev-${cuda_ver}          \
+    cuda-minimal-build-${cuda_ver}          \
+    cuda-command-line-tools-${cuda_ver}     \
     ;
 
 if [[ ! -L /usr/local/cuda ]]; then

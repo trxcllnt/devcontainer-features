@@ -26,6 +26,11 @@ ls -all "$NVHPC_ROOT"/ 1>&2
 >&2 echo "PATH=$PATH"
 module list 1>&2
 
+# Check CMake
+CMAKE_VERSION="$(wget -O- -q https://api.github.com/repos/Kitware/CMake/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+check "cmake exists and is on path" which cmake
+check "version" cmake --version | grep "$CMAKE_VERSION"
+
 # Check CUDA
 CUDA_VERSION="$(\
     apt policy cuda-compiler-11-8 2>/dev/null \

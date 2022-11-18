@@ -1,7 +1,10 @@
 {
-    "cuda_llvm_nvhpc": {
+    "cmake_cuda_llvm_nvhpc": {
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
         "features": {
+            "cmake": {
+                "cmakeVersion": "latest"
+            },
             "cuda": {
                 "cudaVersion": "11.8"
             },

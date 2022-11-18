@@ -17,6 +17,7 @@ jobs:
     strategy:
       matrix:
         features:
+          - cmake
           - cuda
           - llvm
           - nvhpc

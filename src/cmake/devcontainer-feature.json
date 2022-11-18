@@ -1,10 +1,10 @@
 {
-    "name": "LLVM compilers and tools",
-    "id": "llvm",
+    "name": "CMake",
+    "id": "cmake",
     "version": "1.0.0",
     "description": "A feature to install CMake",
     "options": {
-        "llvmVersion": {
+        "cmakeVersion": {
             "type": "string",
             "proposals": [
                 "latest",

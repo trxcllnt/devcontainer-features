@@ -1,5 +1,5 @@
 
-# CUDA Toolkit (cuda-toolkit)
+# CUDA Toolkit (cuda)
 
 A feature to install the NVIDIA CUDA Toolkit
 
@@ -7,7 +7,7 @@ A feature to install the NVIDIA CUDA Toolkit
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/cuda-toolkit:1": {}
+    "ghcr.io/trxcllnt/devcontainer-features/cuda:1": {}
 }
 ```
 

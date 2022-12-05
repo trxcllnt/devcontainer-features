@@ -53,6 +53,7 @@ apt-get install -y --no-install-recommends  \
     cuda-nvml-dev-${cuda_ver}               \
     cuda-compiler-${cuda_ver}               \
     cuda-libraries-${cuda_ver}              \
+    cuda-driver-dev-${cuda_ver}             \
     cuda-libraries-dev-${cuda_ver}          \
     cuda-minimal-build-${cuda_ver}          \
     cuda-command-line-tools-${cuda_ver}     \

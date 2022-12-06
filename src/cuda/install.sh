@@ -64,32 +64,38 @@ if [[ ! -L /usr/local/cuda ]]; then
     ln -s "/usr/local/cuda-${CUDAVERSION}" "/usr/local/cuda";
 fi
 
-for x in  {/etc/skel,${_CONTAINER_USER_HOME}}/.bashrc; do
+mkdir -p /etc/profile.d
+
+for x in /etc/{bash.bashrc,profile.d/z-cuda.sh}; do
     cat <<EOF >> $x
 export CUDA_HOME="/usr/local/cuda";
-export PATH="/usr/local/nvidia/bin:\$CUDA_HOME/bin:\${PATH:+\$PATH:}";
-export LIBRARY_PATH="\${LIBRARY_PATH:+\$LIBRARY_PATH:}\$CUDA_HOME/lib64/stubs";
+export PATH="/usr/local/nvidia/bin:\${CUDA_HOME}/bin:\${PATH:+\$PATH:}";
+export LIBRARY_PATH="\${LIBRARY_PATH:+\$LIBRARY_PATH:}\${CUDA_HOME}/lib64/stubs";
 EOF
 done
 
-cat <<EOF > "/etc/bash_env"
+chmod +x /etc/profile.d/z-cuda.sh
+
+cat <<EOF > /etc/bash.bash_env
 #! /usr/bin/env bash
+
+echo "executing /etc/bash.bash_env"
 
 # Make non-interactive/non-login shells behave like interactive login shells
 if ! shopt -q login_shell; then
     if [ -f /etc/profile ]; then
         . /etc/profile
     fi
-    for x in $HOME/.{bash_profile,bash_login,profile}; do
-        if [ -f $x ]; then
-            . $x
+    for x in \$HOME/.{bash_profile,bash_login,profile}; do
+        if [ -f \$x ]; then
+            . \$x
             break
         fi
     done
 fi
 EOF
 
-chmod +x /etc/bash_env
+chmod +x /etc/bash.bash_env
 
 rm -rf /var/tmp/* \
        /var/cache/apt/* \

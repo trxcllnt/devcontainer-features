@@ -66,13 +66,11 @@ fi
 
 mkdir -p /etc/profile.d
 
-for x in /etc/{bash.bashrc,profile.d/z-cuda.sh}; do
-    cat <<EOF >> $x
+cat <<EOF > /etc/profile.d/z-cuda.sh
 export CUDA_HOME="/usr/local/cuda";
 export PATH="/usr/local/nvidia/bin:\${CUDA_HOME}/bin:\${PATH:+\$PATH:}";
 export LIBRARY_PATH="\${LIBRARY_PATH:+\$LIBRARY_PATH:}\${CUDA_HOME}/lib64/stubs";
 EOF
-done
 
 chmod +x /etc/profile.d/z-cuda.sh
 

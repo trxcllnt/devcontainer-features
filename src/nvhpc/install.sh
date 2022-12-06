@@ -72,8 +72,7 @@ ln -sf "${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles" /usr/share/lmod/lmod/mo
 
 mkdir -p /etc/profile.d
 
-for x in /etc/{bash.bashrc,profile.d/z-nvhpc.sh}; do
-    cat <<EOF >> $x
+cat <<EOF >> /etc/profile.d/z-nvhpc.sh
 export NVHPC="${NVHPC}";
 export NVHPC_ROOT="${NVHPC_ROOT}";
 export NVHPC_VERSION="${NVHPC_VERSION}";
@@ -86,7 +85,6 @@ module try-load nvhpc-nompi;
 module try-load hpcx-mt;
 module try-load hpcx;
 EOF
-done
 
 chmod +x /etc/profile.d/z-nvhpc.sh
 

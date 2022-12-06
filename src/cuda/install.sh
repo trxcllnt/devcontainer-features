@@ -68,8 +68,15 @@ mkdir -p /etc/profile.d
 
 cat <<EOF > /etc/profile.d/z-cuda.sh
 export CUDA_HOME="/usr/local/cuda";
-export PATH="/usr/local/nvidia/bin:\${CUDA_HOME}/bin:\${PATH:+\$PATH:}";
-export LIBRARY_PATH="\${LIBRARY_PATH:+\$LIBRARY_PATH:}\${CUDA_HOME}/lib64/stubs";
+if [[ -z "\$PATH" || \$PATH != *"\${CUDA_HOME}/bin"* ]]; then
+    export PATH="\${CUDA_HOME}/bin:\${PATH:+\$PATH:}";
+fi
+if [[ -z "\$PATH" || \$PATH != *"/usr/local/nvidia/bin"* ]]; then
+    export PATH="/usr/local/nvidia/bin:\${PATH:+\$PATH:}";
+fi
+if [[ -z "\$LIBRARY_PATH" || \$LIBRARY_PATH != *"\${CUDA_HOME}/lib64/stubs"* ]]; then
+    export LIBRARY_PATH="\${LIBRARY_PATH:+\$LIBRARY_PATH:}\${CUDA_HOME}/lib64/stubs";
+fi
 EOF
 
 chmod +x /etc/profile.d/z-cuda.sh

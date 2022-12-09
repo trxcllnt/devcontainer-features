@@ -15,7 +15,7 @@ A feature to install the NVIDIA CUDA Toolkit
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| cudaVersion | Version of the CUDA Toolkit to install. | string | 11.8 |
+| cudaVersion | Version of the CUDA Toolkit to install. | string | 12.0 |
 
 
 

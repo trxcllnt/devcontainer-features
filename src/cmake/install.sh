@@ -33,10 +33,11 @@ CMAKE_VERSION=${CMAKEVERSION:-latest}
 
 if [ $CMAKE_VERSION == latest ]; then
     check_packages jq;
-    CMAKE_VERSION="$(wget -O- -q \
-        ${GITHUB_ACTOR:+--user=$GITHUB_ACTOR} \
-        ${GITHUB_TOKEN:+--password=$GITHUB_TOKEN} \
-        https://api.github.com/repos/Kitware/CMake/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+    CMAKE_VERSION="$(wget -O- -q https://api.github.com/repos/Kitware/CMake/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+    while [[ -z $CMAKE_VERSION ]]; do
+        sleep 20;
+        CMAKE_VERSION="$(wget -O- -q https://api.github.com/repos/Kitware/CMake/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+    done
 fi
 
 wget -O /tmp/cmake_${CMAKE_VERSION}.sh \

@@ -33,7 +33,10 @@ SCCACHE_VERSION=${SCCACHEVERSION:-latest}
 
 if [ $SCCACHE_VERSION == latest ]; then
     check_packages jq;
-    SCCACHE_VERSION="$(wget -O- -q https://api.github.com/repos/mozilla/sccache/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+    SCCACHE_VERSION="$(wget -O- -q \
+        ${GITHUB_ACTOR:+--user=$GITHUB_ACTOR} \
+        ${GITHUB_TOKEN:+--password=$GITHUB_TOKEN} \
+        https://api.github.com/repos/mozilla/sccache/releases/latest | jq -r ".tag_name" | tr -d 'v')";
 fi
 
 # Install sccache

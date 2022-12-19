@@ -1,7 +1,7 @@
 {
     "name": "LLVM compilers and tools",
     "id": "llvm",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "A feature to install LLVM compilers and tools",
     "options": {
         "llvmVersion": {
@@ -19,5 +19,8 @@
             "default": "dev",
             "description": "LLVM version to install."
         }
+    },
+    "containerEnv": {
+        "BASH_ENV": "/etc/bash.bash_env"
     }
 }

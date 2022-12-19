@@ -43,7 +43,9 @@ check "installed" stat /usr/local/cuda-11.8 /usr/local/cuda
 check "nvcc exists and is on path" which nvcc
 
 # Check LLVM
-check "version" grep "llvm-toolchain-$(lsb_release -cs) main" /etc/apt/sources.list{,.d/*.list}
+echo "LLVM_VERSION: $LLVM_VERSION"
+check "clang version" bash -c "clang --version | grep 'clang version $LLVM_VERSION'"
+check "apt repo" grep "llvm-toolchain-$(lsb_release -cs) main" /etc/apt/sources.list{,.d/*.list}
 
 # Check ninja
 NINJA_VERSION="$(wget -O- -q https://api.github.com/repos/ninja-build/ninja/releases/latest | jq -r ".tag_name" | tr -d 'v')";

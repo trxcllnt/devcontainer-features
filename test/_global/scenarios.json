@@ -1,6 +1,6 @@
 {
     "cmake_cuda_llvm_ninja_nvhpc_sccache": {
-        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "image": "mcr.microsoft.com/devcontainers/base:jammy",
         "features": {
             "cmake": {
                 "cmakeVersion": "latest"

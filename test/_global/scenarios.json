@@ -1,9 +1,9 @@
 {
     "cmake_cuda_llvm_ninja_nvhpc_sccache": {
-        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "image": "mcr.microsoft.com/devcontainers/base:jammy",
         "features": {
             "cmake": {
-                "cmakeVersion": "latest"
+                "cmakeVersion": "3.25.1"
             },
             "cuda": {
                 "cudaVersion": "11.8"
@@ -12,13 +12,13 @@
                 "llvmVersion": "dev"
             },
             "ninja": {
-                "ninjaVersion": "latest"
+                "ninjaVersion": "1.11.1"
             },
             "nvhpc": {
                 "nvhpcVersion": "22.11"
             },
             "sccache": {
-                "sccacheVersion": "latest"
+                "sccacheVersion": "0.3.1"
             }
         }
     }

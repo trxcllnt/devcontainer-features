@@ -4,7 +4,7 @@
 # ```
 # npx --package=@devcontainers/cli -c 'devcontainer features test \
 #     --features nvhpc \
-#     --base-image mcr.microsoft.com/devcontainers/base:ubuntu .'
+#     --base-image mcr.microsoft.com/devcontainers/base:jammy .'
 # ```
 
 set -ex

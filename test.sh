@@ -2,7 +2,7 @@
 
 images=()
 images+=("ubuntu:jammy")
-images+=("mcr.microsoft.com/devcontainers/base:ubuntu")
+images+=("mcr.microsoft.com/devcontainers/base:jammy")
 
 for image in $images; do
     features=()

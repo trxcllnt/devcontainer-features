@@ -33,15 +33,15 @@ SCCACHE_VERSION=${SCCACHEVERSION:-latest}
 
 if [ $SCCACHE_VERSION == latest ]; then
     check_packages jq;
-    SCCACHE_VERSION="$(wget -O- -q https://api.github.com/repos/mozilla/sccache/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+    SCCACHE_VERSION=;
     while [[ -z $SCCACHE_VERSION ]]; do
-        sleep 20;
-        SCCACHE_VERSION="$(wget -O- -q https://api.github.com/repos/mozilla/sccache/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+        sleep $(($RANDOM % 60));
+        SCCACHE_VERSION="$(wget --no-hsts -q -O- https://api.github.com/repos/mozilla/sccache/releases/latest | jq -r ".tag_name" | tr -d 'v')";
     done
 fi
 
 # Install sccache
-wget -O- -q "https://github.com/mozilla/sccache/releases/download/v$SCCACHE_VERSION/sccache-v$SCCACHE_VERSION-$(uname -p)-unknown-linux-musl.tar.gz" \
+wget --no-hsts -q -O- "https://github.com/mozilla/sccache/releases/download/v$SCCACHE_VERSION/sccache-v$SCCACHE_VERSION-$(uname -p)-unknown-linux-musl.tar.gz" \
     | tar -C /usr/bin -zf - --wildcards --strip-components=1 -x */sccache \
  && chmod +x /usr/bin/sccache
 

@@ -17,7 +17,7 @@ SCCACHE_VERSION="$(wget -O- -q https://api.github.com/repos/mozilla/sccache/rele
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
 check "sccache exists and is on path" which sccache
-check "version" sccache --version | grep "$SCCACHE_VERSION"
+check "version" bash -c "sccache --version | grep '$SCCACHE_VERSION'"
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.

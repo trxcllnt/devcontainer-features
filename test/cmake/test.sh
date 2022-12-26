@@ -17,7 +17,7 @@ CMAKE_VERSION="$(wget -O- -q https://api.github.com/repos/Kitware/CMake/releases
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
 check "cmake exists and is on path" which cmake
-check "version" cmake --version | grep "$CMAKE_VERSION"
+check "version" bash -c "cmake --version | grep '$CMAKE_VERSION'"
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.

@@ -33,14 +33,14 @@ CMAKE_VERSION=${CMAKEVERSION:-latest}
 
 if [ $CMAKE_VERSION == latest ]; then
     check_packages jq;
-    CMAKE_VERSION="$(wget -O- -q https://api.github.com/repos/Kitware/CMake/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+    CMAKE_VERSION=;
     while [[ -z $CMAKE_VERSION ]]; do
-        sleep 20;
-        CMAKE_VERSION="$(wget -O- -q https://api.github.com/repos/Kitware/CMake/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+        sleep $(($RANDOM % 60));
+        CMAKE_VERSION="$(wget --no-hsts -O- -q https://api.github.com/repos/Kitware/CMake/releases/latest | jq -r ".tag_name" | tr -d 'v')";
     done
 fi
 
-wget -O /tmp/cmake_${CMAKE_VERSION}.sh \
+wget --no-hsts -O /tmp/cmake_${CMAKE_VERSION}.sh \
     https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-$(uname -p).sh
 
 echo "Installing CMake...";

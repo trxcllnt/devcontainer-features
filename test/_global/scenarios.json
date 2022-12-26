@@ -11,6 +11,9 @@
             "llvm": {
                 "llvmVersion": "dev"
             },
+            "mambaforge": {
+                "mambaforgeVersion": "22.9.0-2"
+            },
             "ninja": {
                 "ninjaVersion": "1.11.1"
             },

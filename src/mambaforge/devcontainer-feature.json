@@ -1,0 +1,25 @@
+{
+    "name": "Mambaforge",
+    "id": "mambaforge",
+    "version": "1.0.0",
+    "description": "A feature to install mambaforge",
+    "options": {
+        "condaDir": {
+          "type": "string",
+          "default": "/opt/conda",
+          "description": "Conda install dir."
+        },
+        "mambaforgeVersion": {
+            "type": "string",
+            "proposals": [
+                "latest",
+                "22.9.0-2"
+            ],
+            "default": "latest",
+            "description": "Mambaforge version to install."
+        }
+    },
+    "containerEnv": {
+        "BASH_ENV": "/etc/bash.bash_env"
+    }
+}

@@ -27,7 +27,7 @@ ls -all "$NVHPC_ROOT"/ 1>&2
 module list 1>&2
 
 # Check CMake
-CMAKE_VERSION="$(wget -O- -q https://api.github.com/repos/Kitware/CMake/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+CMAKE_VERSION="3.25.1";
 check "cmake exists and is on path" which cmake
 check "version" bash -c "cmake --version | grep '$CMAKE_VERSION'"
 
@@ -55,7 +55,7 @@ conda --version
 mamba --version
 
 # Check ninja
-NINJA_VERSION="$(wget -O- -q https://api.github.com/repos/ninja-build/ninja/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+NINJA_VERSION="1.11.1";
 check "ninja exists and is on path" which ninja
 check "version" bash -c "ninja --version | grep '$NINJA_VERSION'"
 
@@ -64,8 +64,8 @@ check "version" bash -c "echo '$NVHPC_VERSION' | grep '22.11'"
 check "installed" stat /opt/nvidia/hpc_sdk
 check "nvc++ exists and is on path" which nvc++
 
-# Check ninja
-SCCACHE_VERSION="$(wget -O- -q https://api.github.com/repos/mozilla/sccache/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+# Check sccache
+SCCACHE_VERSION="0.3.1";
 check "sccache exists and is on path" which sccache
 check "version" bash -c "sccache --version | grep '$SCCACHE_VERSION'"
 

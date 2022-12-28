@@ -61,6 +61,7 @@ fi
 mkdir -p /etc/profile.d
 
 cat <<EOF > /etc/profile.d/z-conda.sh
+export MAMBA_NO_BANNER=1;
 if [[ -z "\$PATH" || \$PATH != *"${CONDADIR}/bin"* ]]; then
     export PATH="${CONDADIR}/bin:\${PATH:+\$PATH:}";
 fi

@@ -12,12 +12,15 @@ set -ex
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib
 
-SCCACHE_VERSION="$(wget -O- -q https://api.github.com/repos/mozilla/sccache/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+MAMBAFORGE_VERSION="$(wget -O- -q https://api.github.com/repos/conda-forge/miniforge/releases/latest | jq -r ".tag_name" | tr -d 'v')";
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "sccache exists and is on path" which sccache
-check "version" bash -c "sccache --version | grep '$SCCACHE_VERSION'"
+check "conda exists and is on path" which conda
+check "mamba exists and is on path" which mamba
+
+conda --version
+mamba --version
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.

@@ -33,7 +33,7 @@ check_packages                  \
 echo "Downloading LLVM gpg key...";
 
 tmpdir="$(mktemp -d)";
-wget -O $tmpdir/llvm-snapshot.asc https://apt.llvm.org/llvm-snapshot.gpg.key;
+wget --no-hsts -q -O $tmpdir/llvm-snapshot.asc https://apt.llvm.org/llvm-snapshot.gpg.key;
 
 find "$tmpdir" -type f -name '*.asc' -exec bash -c "gpg --dearmor -o \
   /etc/apt/trusted.gpg.d/\$(echo '{}' | sed s@$tmpdir/@@ | sed s@.asc@.gpg@) \

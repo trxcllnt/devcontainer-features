@@ -32,7 +32,7 @@ fi
 cd "$(mktemp -d)";
 
 # Add NVIDIA's keyring and apt repository
-wget "\
+wget --no-hsts "\
 https://developer.download.nvidia.com/compute/cuda/repos/\
 $(. /etc/os-release; echo "$ID${VERSION_ID/./}")/\
 ${nv_arch}/cuda-keyring_1.0-1_all.deb"

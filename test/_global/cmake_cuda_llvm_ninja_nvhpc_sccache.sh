@@ -27,9 +27,9 @@ ls -all "$NVHPC_ROOT"/ 1>&2
 module list 1>&2
 
 # Check CMake
-CMAKE_VERSION="$(wget -O- -q https://api.github.com/repos/Kitware/CMake/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+CMAKE_VERSION="3.25.1";
 check "cmake exists and is on path" which cmake
-check "version" cmake --version | grep "$CMAKE_VERSION"
+check "version" bash -c "cmake --version | grep '$CMAKE_VERSION'"
 
 # Check CUDA
 CUDA_VERSION="$(\
@@ -38,7 +38,7 @@ CUDA_VERSION="$(\
   | cut -d':' -f2 \
   | cut -d'-' -f1)";
 
-check "version" echo "$CUDA_VERSION" | grep '11.8.0'
+check "version" bash -c "echo '$CUDA_VERSION' | grep '11.8.0'"
 check "installed" stat /usr/local/cuda-11.8 /usr/local/cuda
 check "nvcc exists and is on path" which nvcc
 
@@ -47,20 +47,27 @@ echo "LLVM_VERSION: $LLVM_VERSION"
 check "clang version" bash -c "clang --version | grep 'clang version $LLVM_VERSION'"
 check "apt repo" grep "llvm-toolchain-$(lsb_release -cs) main" /etc/apt/sources.list{,.d/*.list}
 
+# Check Mambaforge
+check "conda exists and is on path" which conda
+check "mamba exists and is on path" which mamba
+
+conda --version
+mamba --version
+
 # Check ninja
-NINJA_VERSION="$(wget -O- -q https://api.github.com/repos/ninja-build/ninja/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+NINJA_VERSION="1.11.1";
 check "ninja exists and is on path" which ninja
-check "version" ninja --version | grep "$NINJA_VERSION"
+check "version" bash -c "ninja --version | grep '$NINJA_VERSION'"
 
 # Check NVHPC
-check "version" echo "$NVHPC_VERSION" | grep '22.11'
+check "version" bash -c "echo '$NVHPC_VERSION' | grep '22.11'"
 check "installed" stat /opt/nvidia/hpc_sdk
 check "nvc++ exists and is on path" which nvc++
 
-# Check ninja
-SCCACHE_VERSION="$(wget -O- -q https://api.github.com/repos/mozilla/sccache/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+# Check sccache
+SCCACHE_VERSION="0.3.1";
 check "sccache exists and is on path" which sccache
-check "version" sccache --version | grep "$SCCACHE_VERSION"
+check "version" bash -c "sccache --version | grep '$SCCACHE_VERSION'"
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.

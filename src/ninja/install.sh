@@ -33,15 +33,15 @@ NINJA_VERSION=${NINJAVERSION:-latest}
 
 if [ $NINJA_VERSION == latest ]; then
     check_packages jq;
-    NINJA_VERSION="$(wget -O- -q https://api.github.com/repos/ninja-build/ninja/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+    NINJA_VERSION=;
     while [[ -z $NINJA_VERSION ]]; do
-        sleep 20;
-        NINJA_VERSION="$(wget -O- -q https://api.github.com/repos/ninja-build/ninja/releases/latest | jq -r ".tag_name" | tr -d 'v')";
+        sleep $(($RANDOM % 60));
+        NINJA_VERSION="$(wget --no-hsts -q -O- https://api.github.com/repos/ninja-build/ninja/releases/latest | jq -r ".tag_name" | tr -d 'v')";
     done
 fi
 
 # Install Ninja
-wget -O /tmp/ninja-linux.zip -q \
+wget --no-hsts -q -O /tmp/ninja-linux.zip \
     https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/ninja-linux.zip
 unzip -d /usr/bin /tmp/ninja-linux.zip
 chmod +x /usr/bin/ninja

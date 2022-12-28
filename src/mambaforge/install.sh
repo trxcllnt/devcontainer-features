@@ -34,8 +34,7 @@ if [ $MAMBAFORGE_VERSION == latest ]; then
     done
 fi
 
-wget --no-hsts -q \
-    -O /tmp/miniforge.sh \
+wget --no-hsts -q -O /tmp/miniforge.sh \
     https://github.com/conda-forge/miniforge/releases/download/${MAMBAFORGE_VERSION}/Mambaforge-${MAMBAFORGE_VERSION}-Linux-$(uname -p).sh
 
 echo "Installing Mambaforge...";

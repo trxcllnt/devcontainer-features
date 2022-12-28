@@ -50,12 +50,12 @@ find ${CONDADIR} -follow -type f -name '*.a' -delete;
 find ${CONDADIR} -follow -type f -name '*.pyc' -delete;
 conda clean --force-pkgs-dirs --all --yes;
 
-if [[ -n $_CONTAINER_USER_HOME ]]; then
-    # Insert the conda env name into codespaces' modified PS1
+# Insert the conda env name into codespaces' modified PS1
+if [[ -f "${_REMOTE_USER_HOME}/.bashrc" ]]; then
+    sed -i -re 's/PS1="(\$\{userpart\} )/PS1="${CONDA_PROMPT_MODIFIER:-}\1/g' ${_REMOTE_USER_HOME}/.bashrc;
+fi
+if [[ -f "${_CONTAINER_USER_HOME}/.bashrc" ]]; then
     sed -i -re 's/PS1="(\$\{userpart\} )/PS1="${CONDA_PROMPT_MODIFIER:-}\1/g' ${_CONTAINER_USER_HOME}/.bashrc;
-    if [[ $_CONTAINER_USER_HOME != $_REMOTE_USER_HOME ]]; then
-        sed -i -re 's/PS1="(\$\{userpart\} )/PS1="${CONDA_PROMPT_MODIFIER:-}\1/g' ${_REMOTE_USER_HOME}/.bashrc;
-    fi
 fi
 
 mkdir -p /etc/profile.d

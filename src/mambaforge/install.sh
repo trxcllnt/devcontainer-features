@@ -50,9 +50,17 @@ find ${CONDADIR} -follow -type f -name '*.pyc' -delete;
 conda clean --force-pkgs-dirs --all --yes;
 
 # Insert the conda env name into codespaces' modified PS1
+
+for rc_file in /home/*/.bashrc; do
+    if [[ -f "$rc_file" ]]; then
+        sed -i -re 's/PS1="(\$\{userpart\} )/PS1="${CONDA_PROMPT_MODIFIER:-}\1/g' "$rc_file";
+    fi
+done
+
 if [[ -f "${_REMOTE_USER_HOME}/.bashrc" ]]; then
     sed -i -re 's/PS1="(\$\{userpart\} )/PS1="${CONDA_PROMPT_MODIFIER:-}\1/g' ${_REMOTE_USER_HOME}/.bashrc;
 fi
+
 if [[ -f "${_CONTAINER_USER_HOME}/.bashrc" ]]; then
     sed -i -re 's/PS1="(\$\{userpart\} )/PS1="${CONDA_PROMPT_MODIFIER:-}\1/g' ${_CONTAINER_USER_HOME}/.bashrc;
 fi

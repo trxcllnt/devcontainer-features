@@ -49,33 +49,48 @@ find ${CONDADIR} -follow -type f -name '*.a' -delete;
 find ${CONDADIR} -follow -type f -name '*.pyc' -delete;
 conda clean --force-pkgs-dirs --all --yes;
 
-# Insert the conda env name into codespaces' modified PS1
+mkdir -p /etc/profile.d;
 
-for rc_file in /home/*/.bashrc; do
-    if [[ -f "$rc_file" ]]; then
-        sed -i -re 's/PS1="(\$\{userpart\} )/PS1="${CONDA_PROMPT_MODIFIER:-}\1/g' "$rc_file";
-    fi
-done
-
-if [[ -f "${_REMOTE_USER_HOME}/.bashrc" ]]; then
-    sed -i -re 's/PS1="(\$\{userpart\} )/PS1="${CONDA_PROMPT_MODIFIER:-}\1/g' ${_REMOTE_USER_HOME}/.bashrc;
-fi
-
-if [[ -f "${_CONTAINER_USER_HOME}/.bashrc" ]]; then
-    sed -i -re 's/PS1="(\$\{userpart\} )/PS1="${CONDA_PROMPT_MODIFIER:-}\1/g' ${_CONTAINER_USER_HOME}/.bashrc;
-fi
-
-mkdir -p /etc/profile.d
-
-cat <<EOF > /etc/profile.d/z-conda.sh
+cat <<EOF > ${CONDADIR}/bashrc-snippet.sh
 export MAMBA_NO_BANNER=1;
 if [[ -z "\$PATH" || \$PATH != *"${CONDADIR}/bin"* ]]; then
     export PATH="${CONDADIR}/bin:\${PATH:+\$PATH:}";
 fi
-. ${CONDADIR}/etc/profile.d/conda.sh && conda activate base
+if [[ "\$(conda info -e | grep -q "\${CONDA_DEFAULT_ENV:-base}"; echo \$?)" == 0 ]]; then
+    CONDA_DEFAULT_ENV="\${CONDA_DEFAULT_ENV:-base}";
+fi
+. /opt/conda/etc/profile.d/conda.sh;
+conda activate "\${CONDA_DEFAULT_ENV:-base}";
 EOF
 
-chmod +x /etc/profile.d/z-conda.sh
+cat <<EOF > /etc/profile.d/z-conda.sh
+export MAMBA_NO_BANNER=1;
+
+if [[ -z "\$PATH" || \$PATH != *"${CONDADIR}/bin"* ]]; then
+    export PATH="${CONDADIR}/bin:\${PATH:+\$PATH:}";
+fi
+
+if [[ -f "\$HOME/.bashrc" ]]; then
+    # Add "conda activate base" to ~/.bashrc
+    if [[ "\$(grep -q ". ${CONDADIR}/etc/profile.d/conda.sh" "\$HOME/.bashrc"; echo \$?)" != 0 ]]; then
+        if [[ "\$(grep -q "# Codespaces bash prompt theme" "\$HOME/.bashrc"; echo \$?)" == 0 ]]; then
+            # Activate conda before the codespaces bash prompt sets PS1
+            conda_activate_snippet="\$(printf %q "\$(cat "${CONDADIR}/bashrc-snippet.sh")" | cut -b1 --complement | cut -d\' -f2)";
+            sed -i "/^# Codespaces bash prompt theme\\\$/i \${conda_activate_snippet}\n" "\$HOME/.bashrc";
+            # Remove leading/trailing spaces after dirname/git branch in PS1
+            sed -i -re 's@(\\\\\[\\\\033\[0;36m\\\\]\)) @\1@g' "\$HOME/.bashrc";
+            sed -i -re 's@\w \\\$\{gitbranch\}@\w\${gitbranch}@g' "\$HOME/.bashrc";
+            sed -i -re 's@(\\\\\[\\\\033\[0;36m\\\\\])\((\\\\\[\\\\033\[1;31m\\\\\]\\\$\{BRANCH\})@ \1(\2@' "\$HOME/.bashrc";
+            # Insert the conda env name into codespaces' modified PS1
+            sed -i -re 's@PS1="(\\\$\{userpart\} )@PS1="\${CONDA_PROMPT_MODIFIER:-}\1@g' "\$HOME/.bashrc";
+        else
+            cat "${CONDADIR}/bashrc-snippet.sh" >>  "\$HOME/.bashrc";
+        fi
+    fi
+fi
+EOF
+
+chmod +x /etc/profile.d/z-conda.sh;
 
 cat <<EOF > /etc/bash.bash_env
 #! /usr/bin/env bash
@@ -94,7 +109,7 @@ if ! shopt -q login_shell; then
 fi
 EOF
 
-chmod +x /etc/bash.bash_env
+chmod +x /etc/bash.bash_env;
 
 rm -rf /var/tmp/* \
        /var/cache/apt/* \

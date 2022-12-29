@@ -18,6 +18,7 @@ MAMBAFORGE_VERSION="$(wget -O- -q https://api.github.com/repos/conda-forge/minif
 # The 'check' command comes from the dev-container-features-test-lib.
 check "conda exists and is on path" which conda
 check "mamba exists and is on path" which mamba
+check "mamba no banner" bash -c "echo '$MAMBA_NO_BANNER' | grep '1'"
 
 conda --version
 mamba --version

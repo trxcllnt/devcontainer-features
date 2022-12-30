@@ -4,7 +4,7 @@
 # ```
 # npx --package=@devcontainers/cli -c 'devcontainer features test \
 #     --features nvhpc \
-#     --base-image mcr.microsoft.com/devcontainers/base:ubuntu .'
+#     --base-image mcr.microsoft.com/devcontainers/base:jammy .'
 # ```
 
 set -ex
@@ -24,7 +24,7 @@ module list 1>&2
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "version" echo "$NVHPC_VERSION" | grep '22.11'
+check "version" bash -c "echo '$NVHPC_VERSION' | grep '22.11'"
 check "installed" stat /opt/nvidia/hpc_sdk
 check "nvc++ exists and is on path" which nvc++
 

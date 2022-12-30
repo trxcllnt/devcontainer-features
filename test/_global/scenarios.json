@@ -1,25 +1,42 @@
 {
-    "cmake_cuda_llvm_ninja_nvhpc_sccache": {
-        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-        "features": {
-            "cmake": {
-                "cmakeVersion": "latest"
-            },
-            "cuda": {
-                "cudaVersion": "12.0"
-            },
-            "llvm": {
-                "llvmVersion": "dev"
-            },
-            "ninja": {
-                "ninjaVersion": "latest"
-            },
-            "nvhpc": {
-                "nvhpcVersion": "22.11"
-            },
-            "sccache": {
-                "sccacheVersion": "latest"
-            }
-        }
-    }
+  "cmake_cuda_llvm_ninja_nvhpc_sccache_mambaforge": {
+    "image": "mcr.microsoft.com/devcontainers/base:jammy",
+    "features": {
+      "ghcr.io/devcontainers/features/git:1": {
+        "ppa": "true"
+      },
+      "ghcr.io/devcontainers/features/git-lfs:1": {},
+      "ghcr.io/devcontainers/features/github-cli:1": {},
+      "cmake": {
+        "cmakeVersion": "3.25.1"
+      },
+      "ninja": {
+        "ninjaVersion": "1.11.1"
+      },
+      "sccache": {
+        "sccacheVersion": "0.3.1"
+      },
+      "llvm": {
+        "llvmVersion": "dev"
+      },
+      "cuda": {
+        "cudaVersion": "12.0"
+      },
+      "nvhpc": {
+        "nvhpcVersion": "22.11"
+      },
+      "mambaforge": {
+        "mambaforgeVersion": "22.9.0-2"
+      }
+    },
+    "overrideFeatureInstallOrder": [
+      "./cmake",
+      "./ninja",
+      "./sccache",
+      "./llvm",
+      "./cuda",
+      "./nvhpc",
+      "./mambaforge"
+    ]
+  }
 }

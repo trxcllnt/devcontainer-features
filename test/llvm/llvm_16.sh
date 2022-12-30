@@ -3,7 +3,7 @@
 # This test can be run with the following command (from the root of this repo)
 # ```
 # npx --package=@devcontainers/cli -c 'devcontainer features test \
-#     --features cuda \
+#     --features llvm \
 #     --base-image mcr.microsoft.com/devcontainers/base:jammy .'
 # ```
 
@@ -12,12 +12,13 @@ set -ex
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib
 
-SCCACHE_VERSION="$(wget -O- -q https://api.github.com/repos/mozilla/sccache/releases/latest | jq -r ".tag_name" | tr -d 'v')";
-
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "sccache exists and is on path" which sccache
-check "version" bash -c "sccache --version | grep '$SCCACHE_VERSION'"
+
+echo "LLVM_VERSION: $LLVM_VERSION"
+check "version" bash -c "echo '$LLVM_VERSION' | grep '16'"
+check "clang version" bash -c "clang --version | grep 'clang version $LLVM_VERSION'"
+check "apt repo" grep "llvm-toolchain-$(lsb_release -cs) main" /etc/apt/sources.list{,.d/*.list}
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.

@@ -32,7 +32,7 @@ fi
 cd "$(mktemp -d)";
 
 # Add NVIDIA's keyring and apt repository
-wget "\
+wget --no-hsts -q "\
 https://developer.download.nvidia.com/compute/cuda/repos/\
 $(. /etc/os-release; echo "$ID${VERSION_ID/./}")/\
 ${nv_arch}/cuda-keyring_1.0-1_all.deb"
@@ -44,11 +44,15 @@ apt-get update;
 echo "Installing minimal CUDA toolkit..."
 
 cuda_ver=${CUDAVERSION/./-}
+gds_tools=
+if [[ $(uname -p) == x86_64 ]]; then
+    gds_tools="gds-tools-${cuda_ver}";
+fi
 
 DEBIAN_FRONTEND=noninteractive              \
 apt-get install -y --no-install-recommends  \
     libnccl-dev                             \
-    gds-tools-${cuda_ver}                   \
+    ${gds_tools}                            \
     cuda-compat-${cuda_ver}                 \
     cuda-nvml-dev-${cuda_ver}               \
     cuda-compiler-${cuda_ver}               \

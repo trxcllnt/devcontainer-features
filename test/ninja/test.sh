@@ -4,7 +4,7 @@
 # ```
 # npx --package=@devcontainers/cli -c 'devcontainer features test \
 #     --features cuda \
-#     --base-image mcr.microsoft.com/devcontainers/base:ubuntu .'
+#     --base-image mcr.microsoft.com/devcontainers/base:jammy .'
 # ```
 
 set -ex
@@ -17,7 +17,7 @@ NINJA_VERSION="$(wget -O- -q https://api.github.com/repos/ninja-build/ninja/rele
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
 check "ninja exists and is on path" which ninja
-check "version" ninja --version | grep "$NINJA_VERSION"
+check "version" bash -c "ninja --version | grep '$NINJA_VERSION'"
 
 # Report result
 # If any of the checks above exited with a non-zero exit code, the test will fail.

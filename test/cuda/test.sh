@@ -4,7 +4,7 @@
 # ```
 # npx --package=@devcontainers/cli -c 'devcontainer features test \
 #     --features cuda \
-#     --base-image mcr.microsoft.com/devcontainers/base:ubuntu .'
+#     --base-image mcr.microsoft.com/devcontainers/base:jammy .'
 # ```
 
 set -ex
@@ -23,7 +23,7 @@ CUDA_VERSION="$(\
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "version" echo "$CUDA_VERSION" | grep '12.0.0'
+check "version" bash -c "echo '$CUDA_VERSION' | grep '12.0.0'"
 check "installed" stat /usr/local/cuda-12.0 /usr/local/cuda
 check "nvcc exists and is on path" which nvcc
 

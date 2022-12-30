@@ -33,7 +33,7 @@ check_packages                  \
 echo "Downloading LLVM gpg key...";
 
 tmpdir="$(mktemp -d)";
-wget -O $tmpdir/llvm-snapshot.asc https://apt.llvm.org/llvm-snapshot.gpg.key;
+wget --no-hsts -q -O $tmpdir/llvm-snapshot.asc https://apt.llvm.org/llvm-snapshot.gpg.key;
 
 find "$tmpdir" -type f -name '*.asc' -exec bash -c "gpg --dearmor -o \
   /etc/apt/trusted.gpg.d/\$(echo '{}' | sed s@$tmpdir/@@ | sed s@.asc@.gpg@) \
@@ -49,26 +49,41 @@ if [[ $llvm_ver == dev ]]; then
 fi
 
 # Install llvm apt repository
-apt-add-repository -y "\
+apt-add-repository -n -y "\
 deb http://apt.llvm.org/$(lsb_release -cs)/ \
 llvm-toolchain-$(lsb_release -cs)${llvm_ver:+"-$llvm_ver"} main";
 
-llvm_ver="$(\
-    apt-cache policy llvm 2>/dev/null \
-  | grep -E 'Candidate: 1:(.*).*$' - \
-  | cut -d':' -f3 \
-  | cut -d'.' -f1)";
+apt-get update -y || TRY_DEV_REPO=1;
 
-DEBIAN_FRONTEND=noninteractive                                      \
-apt-get install -y --no-install-recommends                          \
-    -o Dpkg::Options::="--force-overwrite"                          \
-    `# LLVM and Clang`                                              \
-    {clang-tools,python3-clang}-${llvm_ver}                         \
-    {libc++,libc++abi,libclang,liblldb,libomp,llvm}-${llvm_ver}-dev \
-    clang-format clang-tidy clang clangd lld lldb llvm-runtime llvm \
+if [[ "${TRY_DEV_REPO:-0}" == 1 ]]; then
+    rm /etc/apt/sources.list.d/*llvm*.list;
+
+    apt-add-repository -y "\
+deb http://apt.llvm.org/$(lsb_release -cs)/ \
+llvm-toolchain-$(lsb_release -cs) main";
+
+    llvm_ver="";
+fi
+
+if [[ -z "$llvm_ver" ]]; then
+    llvm_ver="$(\
+        apt-cache policy llvm 2>/dev/null \
+      | grep -E 'Candidate: 1:(.*).*$' - \
+      | cut -d':' -f3 \
+      | cut -d'.' -f1)";
+fi
+
+DEBIAN_FRONTEND=noninteractive                                       \
+apt-get install -y --no-install-recommends                           \
+    `# -o Dpkg::Options::="--force-overwrite"`                       \
+    `# LLVM and Clang`                                               \
+    llvm-${llvm_ver}-runtime                                         \
+    {clang-tools,python3-clang,python3-lldb}-${llvm_ver}             \
+    {libc++,libc++abi,libclang,liblldb,libomp,llvm}-${llvm_ver}-dev  \
+    {clang-format,clang-tidy,clang,clangd,lld,lldb,llvm}-${llvm_ver} \
     ;
 
-# Remove existing clang/llvm alternatives
+# Remove existing clang/llvm/cc/c++ alternatives
 (update-alternatives --remove-all clang        >/dev/null 2>&1 || true);
 (update-alternatives --remove-all clangd       >/dev/null 2>&1 || true);
 (update-alternatives --remove-all clang++      >/dev/null 2>&1 || true);
@@ -77,6 +92,8 @@ apt-get install -y --no-install-recommends                          \
 (update-alternatives --remove-all lldb         >/dev/null 2>&1 || true);
 (update-alternatives --remove-all llvm-config  >/dev/null 2>&1 || true);
 (update-alternatives --remove-all llvm-cov     >/dev/null 2>&1 || true);
+(update-alternatives --remove-all cc           >/dev/null 2>&1 || true);
+(update-alternatives --remove-all c++          >/dev/null 2>&1 || true);
 
 # Install clang/llvm alternatives
 update-alternatives \
@@ -93,21 +110,32 @@ update-alternatives \
 # Set default clang/llvm alternatives
 update-alternatives --set clang $(which clang-${llvm_ver});
 
-export CC="$(which clang)";
-export CXX="$(which clang++)";
+mkdir -p /etc/profile.d
 
-# # Remove existing cc and c++ alternatives
-(update-alternatives --remove-all cc  >/dev/null 2>&1 || true);
-(update-alternatives --remove-all c++ >/dev/null 2>&1 || true);
+cat <<EOF > /etc/profile.d/z-llvm.sh
+export LLVM_VERSION="${llvm_ver}";
+EOF
 
-# # Install alternatives for cc/c++
-# update-alternatives \
-#     --install /usr/bin/cc  cc  $(which $CC)  30 \
-#     --slave   /usr/bin/c++ c++ $(which $CXX)    \
-#     ;
+chmod +x /etc/profile.d/z-llvm.sh
 
-# # Set $CC as the default cc
-# update-alternatives --set cc $(which $CC)
+cat <<EOF > /etc/bash.bash_env
+#! /usr/bin/env bash
+
+# Make non-interactive/non-login shells behave like interactive login shells
+if ! shopt -q login_shell; then
+    if [ -f /etc/profile ]; then
+        . /etc/profile
+    fi
+    for x in \$HOME/.{bash_profile,bash_login,profile}; do
+        if [ -f \$x ]; then
+            . \$x
+            break
+        fi
+    done
+fi
+EOF
+
+chmod +x /etc/bash.bash_env
 
 rm -rf /var/tmp/* \
        /var/cache/apt/* \

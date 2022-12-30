@@ -77,10 +77,6 @@ if [[ -f "\$HOME/.bashrc" ]]; then
             # Activate conda before the codespaces bash prompt sets PS1
             conda_activate_snippet="\$(printf %q "\$(cat "${CONDADIR}/bashrc-snippet.sh")" | cut -b1 --complement | cut -d\' -f2)";
             sed -i "/^# Codespaces bash prompt theme\\\$/i \${conda_activate_snippet}\n" "\$HOME/.bashrc";
-            # Remove leading/trailing spaces after dirname/git branch in PS1
-            sed -i -re 's@(\\\\\[\\\\033\[0;36m\\\\]\)) @\1@g' "\$HOME/.bashrc";
-            sed -i -re 's@\w \\\$\{gitbranch\}@\w\${gitbranch}@g' "\$HOME/.bashrc";
-            sed -i -re 's@(\\\\\[\\\\033\[0;36m\\\\\])\((\\\\\[\\\\033\[1;31m\\\\\]\\\$\{BRANCH\})@ \1(\2@' "\$HOME/.bashrc";
             # Insert the conda env name into codespaces' modified PS1
             sed -i -re 's@PS1="(\\\$\{userpart\} )@PS1="\${CONDA_PROMPT_MODIFIER:-}\1@g' "\$HOME/.bashrc";
         else

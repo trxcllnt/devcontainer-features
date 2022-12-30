@@ -52,15 +52,15 @@ conda clean --force-pkgs-dirs --all --yes;
 mkdir -p /etc/profile.d;
 
 cat <<EOF > ${CONDADIR}/bashrc-snippet.sh
-export MAMBA_NO_BANNER=1;
-if [[ -z "\$PATH" || \$PATH != *"${CONDADIR}/bin"* ]]; then
-    export PATH="${CONDADIR}/bin:\${PATH:+\$PATH:}";
-fi
-if [[ "\$(conda info -e | grep -q "\${CONDA_DEFAULT_ENV:-base}"; echo \$?)" == 0 ]]; then
-    CONDA_DEFAULT_ENV="\${CONDA_DEFAULT_ENV:-base}";
+MAMBA_NO_BANNER=1;
+if [[ -z "\$PATH" || \$PATH != *${CONDADIR}/bin* ]]; then
+    PATH="${CONDADIR}/bin:\${PATH:+\$PATH:}";
 fi
 . /opt/conda/etc/profile.d/conda.sh;
-conda activate "\${CONDA_DEFAULT_ENV:-base}";
+for env_name in \${CONDA_DEFAULT_ENV:-base} base; do
+    if [[ \${CONDA_PREFIX:-} == */\$env_name ]]; then break; fi
+    conda activate "\$env_name" 2>/dev/null && break || continue;
+done;
 EOF
 
 cat <<EOF > /etc/profile.d/z-conda.sh

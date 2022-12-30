@@ -22,13 +22,13 @@ source dev-container-features-test-lib;
 
 # Check CUDA
 CUDA_VERSION="$(\
-    apt policy cuda-compiler-11-8 2>/dev/null \
+    apt policy cuda-compiler-12-0 2>/dev/null \
   | grep -E 'Candidate: (.*).*$' - \
   | cut -d':' -f2 \
   | cut -d'-' -f1)";
 
-check "version" bash -c "echo '$CUDA_VERSION' | grep '11.8.0'";
-check "installed" stat /usr/local/cuda-11.8 /usr/local/cuda;
+check "version" bash -c "echo '$CUDA_VERSION' | grep '12.0.0'";
+check "installed" stat /usr/local/cuda-12.0 /usr/local/cuda;
 check "nvcc exists and is on path" which nvcc;
 
 # Check NVHPC

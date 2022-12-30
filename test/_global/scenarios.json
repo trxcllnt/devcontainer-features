@@ -1,14 +1,7 @@
 {
   "cmake_cuda_llvm_ninja_nvhpc_sccache_mambaforge": {
-    "image": "ubuntu:jammy",
+    "image": "mcr.microsoft.com/devcontainers/base:jammy",
     "features": {
-      "ghcr.io/devcontainers/features/common-utils:1": {
-        "uid": "1000",
-        "gid": "1000",
-        "username": "coder",
-        "installZsh": "true",
-        "upgradePackages": "true"
-      },
       "ghcr.io/devcontainers/features/git:1": {
         "ppa": "true"
       },
@@ -27,7 +20,7 @@
         "llvmVersion": "dev"
       },
       "cuda": {
-        "cudaVersion": "11.8"
+        "cudaVersion": "12.0"
       },
       "nvhpc": {
         "nvhpcVersion": "22.11"
@@ -37,7 +30,6 @@
       }
     },
     "overrideFeatureInstallOrder": [
-      "ghcr.io/devcontainers/features/common-utils",
       "./cmake",
       "./ninja",
       "./sccache",

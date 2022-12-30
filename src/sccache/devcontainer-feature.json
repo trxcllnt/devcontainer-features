@@ -1,19 +1,19 @@
 {
-    "name": "sccache",
-    "id": "sccache",
-    "version": "1.0.4",
-    "description": "A feature to install sccache",
-    "options": {
-        "sccacheVersion": {
-            "type": "string",
-            "proposals": [
-                "latest",
-                "0.3.1",
-                "0.3.0",
-                "0.2.15"
-            ],
-            "default": "latest",
-            "description": "sccache version to install."
-        }
+  "name": "sccache",
+  "id": "sccache",
+  "version": "1.0.4",
+  "description": "A feature to install sccache",
+  "options": {
+    "sccacheVersion": {
+      "type": "string",
+      "proposals": [
+        "latest",
+        "0.3.1",
+        "0.3.0",
+        "0.2.15"
+      ],
+      "default": "latest",
+      "description": "sccache version to install."
     }
+  }
 }

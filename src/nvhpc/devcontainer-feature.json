@@ -1,21 +1,21 @@
 {
-    "name": "NVHPC SDK",
-    "id": "nvhpc",
-    "version": "1.0.6",
-    "description": "A feature to install the NVHPC SDK",
-    "options": {
-        "nvhpcVersion": {
-            "type": "string",
-            "proposals": [
-                "22.11",
-                "22.9",
-                "22.7"
-            ],
-            "default": "22.11",
-            "description": "Version of NVHPC SDK to install."
-        }
-    },
-    "containerEnv": {
-        "BASH_ENV": "/etc/bash.bash_env"
+  "name": "NVHPC SDK",
+  "id": "nvhpc",
+  "version": "1.0.6",
+  "description": "A feature to install the NVHPC SDK",
+  "options": {
+    "nvhpcVersion": {
+      "type": "string",
+      "proposals": [
+        "22.11",
+        "22.9",
+        "22.7"
+      ],
+      "default": "22.11",
+      "description": "Version of NVHPC SDK to install."
     }
+  },
+  "containerEnv": {
+    "BASH_ENV": "/etc/bash.bash_env"
+  }
 }

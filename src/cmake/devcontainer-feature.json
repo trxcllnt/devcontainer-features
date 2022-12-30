@@ -1,19 +1,19 @@
 {
-    "name": "CMake",
-    "id": "cmake",
-    "version": "1.0.6",
-    "description": "A feature to install CMake",
-    "options": {
-        "cmakeVersion": {
-            "type": "string",
-            "proposals": [
-                "latest",
-                "3.25.1",
-                "3.25.0",
-                "3.24.2"
-            ],
-            "default": "latest",
-            "description": "CMake version to install."
-        }
+  "name": "CMake",
+  "id": "cmake",
+  "version": "1.0.6",
+  "description": "A feature to install CMake",
+  "options": {
+    "cmakeVersion": {
+      "type": "string",
+      "proposals": [
+        "latest",
+        "3.25.1",
+        "3.25.0",
+        "3.24.2"
+      ],
+      "default": "latest",
+      "description": "CMake version to install."
     }
+  }
 }

@@ -23,6 +23,7 @@ jobs:
           - mambaforge
           - ninja
           - nvhpc
+          - rust
           - sccache
         baseImage:
           # - debian:latest

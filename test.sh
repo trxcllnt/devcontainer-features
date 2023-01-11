@@ -12,6 +12,7 @@ for image in $images; do
     features+=("mambaforge")
     features+=("ninja")
     features+=("nvhpc")
+    features+=("rust")
     features+=("sccache")
     for feature in $features; do
         npx --package=@devcontainers/cli -c "\

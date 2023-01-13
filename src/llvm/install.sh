@@ -67,10 +67,10 @@ fi
 
 if [[ -z "$llvm_ver" ]]; then
     llvm_ver="$(\
-        apt-cache policy llvm 2>/dev/null \
-      | grep -E 'Candidate: 1:(.*).*$' - \
-      | cut -d':' -f3 \
-      | cut -d'.' -f1)";
+        apt-cache search '^llvm-[0-9]+$' \
+      | cut -d' ' -f1 | cut -d'-' -f2 \
+      | sort -rn | head -n1
+    )";
 fi
 
 DEBIAN_FRONTEND=noninteractive                                       \

@@ -1,13 +1,14 @@
 {
   "name": "LLVM compilers and tools",
   "id": "llvm",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A feature to install LLVM compilers and tools",
   "options": {
     "llvmVersion": {
       "type": "string",
       "proposals": [
         "dev",
+        "16",
         "15",
         "14",
         "13",

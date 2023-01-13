@@ -25,7 +25,8 @@ CUDA_VERSION="$(\
     apt policy cuda-compiler-12-0 2>/dev/null \
   | grep -E 'Candidate: (.*).*$' - \
   | cut -d':' -f2 \
-  | cut -d'-' -f1)";
+  | cut -d'-' -f1 \
+  | sort -rV | head -n1)";
 
 check "version" bash -c "echo '$CUDA_VERSION' | grep '12.0.0'";
 check "installed" stat /usr/local/cuda-12.0 /usr/local/cuda;

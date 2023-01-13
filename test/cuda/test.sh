@@ -19,7 +19,8 @@ CUDA_VERSION="$(\
     apt policy cuda-compiler-12-0 2>/dev/null \
   | grep -E 'Candidate: (.*).*$' - \
   | cut -d':' -f2 \
-  | cut -d'-' -f1)";
+  | cut -d'-' -f1 \
+  | sort -rV | head -n1)";
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.

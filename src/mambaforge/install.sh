@@ -57,7 +57,7 @@ if [[ -z "\$PATH" || \$PATH != *${CONDADIR}/bin* ]]; then
     PATH="${CONDADIR}/bin:\${PATH:+\$PATH:}";
 fi
 . /opt/conda/etc/profile.d/conda.sh;
-for env_name in \${CONDA_DEFAULT_ENV:-base} base; do
+for env_name in \${DEFAULT_CONDA_ENV:-base} \${CONDA_DEFAULT_ENV:-base} base; do
     if [[ \${CONDA_PREFIX:-} == */\$env_name ]]; then break; fi
     conda activate "\$env_name" 2>/dev/null && break || continue;
 done;

@@ -27,9 +27,11 @@ scopes="$(select_required_scopes "user:email" "read:org")";
 if [[ -n "$scopes" ]]; then
     for VAR in GH_TOKEN GITHUB_TOKEN; do
         if [[ -n "$(eval "echo \${${VAR}:-}")" ]]; then
-            if [[ "$(grep -q -E "^${VAR}=$" ~/.bashrc &>/dev/null; echo $?)" != 0 ]]; then
-                echo "${VAR}=" >> ~/.bashrc;
-            fi
+            for ENVFILE in /etc/profile "$HOME/.bashrc"; do
+                if [[ "$(grep -q -E "^${VAR}=$" "$ENVFILE" &>/dev/null; echo $?)" != 0 ]]; then
+                    echo "${VAR}=" | sudo tee -a "$ENVFILE" >/dev/null;
+                fi
+            done
             unset ${VAR};
         fi
     done

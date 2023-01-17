@@ -1,0 +1,6 @@
+{
+  "name": "Devcontainer Utils",
+  "id": "utils",
+  "version": "1.0.0",
+  "description": "A feature to install Devcontainer utility scripts"
+}

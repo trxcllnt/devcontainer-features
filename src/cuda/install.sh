@@ -71,6 +71,8 @@ fi
 mkdir -p /etc/profile.d
 
 cat <<EOF > /etc/profile.d/z-cuda.sh
+#! /usr/bin/env bash
+
 export CUDA_HOME="/usr/local/cuda";
 if [[ -z "\$PATH" || \$PATH != *"\${CUDA_HOME}/bin"* ]]; then
     export PATH="\${CUDA_HOME}/bin:\${PATH:+\$PATH:}";

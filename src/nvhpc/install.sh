@@ -73,6 +73,8 @@ ln -sf "${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles" /usr/share/lmod/lmod/mo
 mkdir -p /etc/profile.d
 
 cat <<EOF >> /etc/profile.d/z-nvhpc.sh
+#! /usr/bin/env bash
+
 export NVHPC="${NVHPC}";
 export NVHPC_ROOT="${NVHPC_ROOT}";
 export NVHPC_VERSION="${NVHPC_VERSION}";

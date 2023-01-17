@@ -16,7 +16,7 @@ USERNAME="${USERNAME:-"${_REMOTE_USER:-"automatic"}"}"
 UPDATE_RC="${UPDATE_RC:-"true"}"
 UPDATE_RUST="${UPDATE_RUST:-"false"}"
 
-set -e
+set -ex
 
 # Clean up
 rm -rf /var/lib/apt/lists/*

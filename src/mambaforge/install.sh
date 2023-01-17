@@ -64,6 +64,8 @@ done;
 EOF
 
 cat <<EOF > /etc/profile.d/z-conda.sh
+#! /usr/bin/env bash
+
 export MAMBA_NO_BANNER=1;
 
 if [[ -z "\$PATH" || \$PATH != *"${CONDADIR}/bin"* ]]; then

@@ -12,8 +12,6 @@ set -ex
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib
 
-SCCACHE_VERSION="$(wget -O- -q https://api.github.com/repos/mozilla/sccache/releases/latest | jq -r ".tag_name" | tr -d 'v')";
-
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
 check "update-content-command.sh exists" stat /opt/devcontainer/bin/update-content-command.sh

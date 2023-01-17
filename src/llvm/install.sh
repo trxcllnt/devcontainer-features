@@ -75,7 +75,7 @@ fi
 
 DEBIAN_FRONTEND=noninteractive                                       \
 apt-get install -y --no-install-recommends                           \
-    `# -o Dpkg::Options::="--force-overwrite"`                       \
+    -o Dpkg::Options::="--force-overwrite"                           \
     `# LLVM and Clang`                                               \
     llvm-${llvm_ver}-runtime                                         \
     {clang-tools,python3-clang,python3-lldb}-${llvm_ver}             \

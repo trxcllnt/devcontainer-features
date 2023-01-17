@@ -25,6 +25,7 @@ jobs:
           - nvhpc
           - rust
           - sccache
+          - utils
         baseImage:
           # - debian:latest
           - ubuntu:jammy

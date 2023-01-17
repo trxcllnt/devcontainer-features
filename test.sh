@@ -14,6 +14,7 @@ for image in $images; do
     features+=("nvhpc")
     features+=("rust")
     features+=("sccache")
+    features+=("utils")
     for feature in $features; do
         npx --package=@devcontainers/cli -c "\
             devcontainer features test \

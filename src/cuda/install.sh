@@ -68,6 +68,13 @@ if [[ ! -L /usr/local/cuda ]]; then
     ln -s "/usr/local/cuda-${CUDAVERSION}" "/usr/local/cuda";
 fi
 
+# Required for nvidia-docker v1
+echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf;
+echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf;
+
+echo "PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}" >> /etc/environment;
+echo "LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" >> /etc/environment;
+
 mkdir -p /etc/profile.d
 
 cat <<EOF > /etc/profile.d/z-cuda.sh

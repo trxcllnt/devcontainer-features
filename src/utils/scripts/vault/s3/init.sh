@@ -8,45 +8,43 @@ vault_token=null;
 VAULT_HOST="${VAULT_HOST:-https://vault.ops.k8s.rapids.ai}"
 
 echo ""
-echo "Attempting to authenticate with vault at '$VAULT_HOST'";
+echo "Attempting to use your GitHub account to authenticate";
+echo "with vault at '$VAULT_HOST'.";
 echo ""
 
 # Initialize the GitHub CLI with the appropriate user scopes
-. /opt/devcontainer/bin/github/cli/init.sh || exit $?;
+. /opt/devcontainer/bin/github/cli/init.sh;
 
-echo "Attempting to use GitHub credentials to authenticate with vault at '$VAULT_HOST'";
-
-# Attempt to authenticate with the GitHub token first
-eval "$(. /opt/devcontainer/bin/vault/auth/github.sh "$VAULT_HOST")";
+# Attempt to authenticate with GitHub
+eval "$(/opt/devcontainer/bin/vault/auth/github.sh "$VAULT_HOST")";
 
 if [[ "${vault_token:-null}" == null ]]; then
-
-    # Fallback to OIDC manual authentication
-    echo "GitHub auth failed, attempting manual OIDC auth" >&2;
-
-    eval "$(. /opt/devcontainer/bin/vault/auth/oidc.sh "$VAULT_HOST")";
-
-    if [[ "${vault_token:-null}" == null ]]; then
-        echo "Manual OIDC authentication failed. Exiting." >&2;
-        exit 1;
-    fi
-    echo "Successfully authenticated with vault!";
+    echo "Your GitHub user was not recognized by vault. Exiting." >&2;
+    exit 1;
 fi
 
+echo "Successfully authenticated with vault!";
+
 # Generate temporary AWS creds
+ttl="ttl=43200s";
 aws_creds="$(                               \
     curl -s                                 \
         -X POST                             \
         -H "X-Vault-Token: $vault_token"    \
         -H "Content-Type: application/json" \
-        "$VAULT_HOST/v1/aws/sts/devs"       \
+        "$VAULT_HOST/v1/aws/sts/devs?$ttl"  \
   | jq -r '.data'                           \
 )";
+
+unset ttl;
+unset vault_token;
 
 aws_role_arn="$(echo "$aws_creds" | jq -r '.arn')";
 aws_access_key_id="$(echo "$aws_creds" | jq -r '.access_key')";
 aws_session_token="$(echo "$aws_creds" | jq -r '.security_token')";
 aws_secret_access_key="$(echo "$aws_creds" | jq -r '.secret_key')";
+
+unset aws_creds;
 
 if [[ "${aws_role_arn:-null}" == null ]]; then
     echo "Failed to generate temporary AWS S3 credentials. Exiting." >&2;
@@ -79,6 +77,11 @@ aws_access_key_id=$aws_access_key_id
 aws_secret_access_key=$aws_secret_access_key
 aws_session_token=$aws_session_token
 EOF
+
+unset aws_role_arn;
+unset aws_access_key_id;
+unset aws_session_token;
+unset aws_secret_access_key;
 
 chmod 0600 ~/.aws/{config,credentials};
 

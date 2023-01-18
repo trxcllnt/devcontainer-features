@@ -11,3 +11,12 @@ find /opt/devcontainer \
     -o -type f -exec chmod u+rw,g+rw,o+r {} \; \)
 
 find /opt/devcontainer -type f -exec chmod +x {} \;
+
+if dpkg -s bash-completion 2>&1 >/dev/null; then
+    if type gh 2>&1 >/dev/null; then
+        gh completion -s bash | tee /etc/bash_completion.d/gh >/dev/null;
+    fi
+    if type glab 2>&1 >/dev/null; then
+        glab completion -s bash | tee /etc/bash_completion.d/glab >/dev/null;
+    fi
+fi

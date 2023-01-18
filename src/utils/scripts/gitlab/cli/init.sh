@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+set -euo pipefail;
+
 _add_warning_to_bashrc() {
     if [[ "$(grep -q print-missing-gitlab-token-warning ~/.bashrc; echo $?)" == 1 ]]; then
         echo '/bin/bash /opt/devcontainer/bin/gitlab/print-missing-token-warning.sh' >> ~/.bashrc;

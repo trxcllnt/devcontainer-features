@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+set -euo pipefail;
+
 git_protocol=
 if [[ "${CODESPACES:-false}" == true ]]; then
     git_protocol="--git-protocol https";
@@ -35,6 +37,7 @@ if [[ -n "$scopes" ]]; then
             unset ${VAR};
         fi
     done
+    unset VAR;
 fi
 
 if [[ $(gh auth status &>/dev/null; echo $?) != 0 ]]; then
@@ -44,6 +47,9 @@ elif [[ -n "$scopes" ]]; then
     echo "Logging into GitHub...";
     gh auth refresh --hostname github.com ${scopes};
 fi
+
+unset scopes;
+unset git_protocol;
 
 gh auth setup-git --hostname github.com;
 

@@ -51,4 +51,11 @@ vault_token="$(                \
   | jq -r '.auth.client_token' \
 )";
 
+unset code;
+unset state;
+unset nonce;
+unset client_nonce;
+unset auth_url;
+unset cb_url;
+
 echo "vault_token='$vault_token'";

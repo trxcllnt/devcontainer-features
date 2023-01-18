@@ -4,6 +4,10 @@ git config --global codespaces-theme.hide-status 1;
 git config --global devcontainers-theme.hide-status 1;
 git config --global devcontainers-theme.show-dirty 0;
 
+if [[ -z "$(git config --get pull.rebase)" ]]; then
+    git config --global pull.rebase false;
+fi
+
 if [[ -z "$(git config --get user.name)" ]]; then
     . /opt/devcontainer/bin/github/cli/init.sh || exit $?;
     git_user_name="$(gh api user --jq '.name')";

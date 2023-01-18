@@ -1,6 +1,8 @@
 #! /usr/bin/env bash
 
-. /opt/devcontainer/bin/github/cli/init.sh || exit $?;
+set -euo pipefail;
+
+. /opt/devcontainer/bin/github/cli/init.sh;
 if [[ -z "$GITHUB_USER" ]]; then exit 1; fi
 
 NAME="$2";
@@ -22,9 +24,17 @@ Fork \`$UPSTREAM_URL\` into \`$ORIGIN_URL\` now (y/n)? " CHOICE </dev/tty
             [Yy]* ) gh repo fork "$UPSTREAM" --clone=false; break;;
             * ) echo "Please answer 'y' or 'n'";;
         esac
+        unset CHOICE;
     done;
 fi
 
 if [[ ! -d ~/${3:-$NAME}/.git ]]; then
     gh repo clone "$REPO" ~/${3:-$NAME};
 fi
+
+unset NAME;
+unset UPSTREAM;
+unset REPO;
+unset FORK;
+unset ORIGIN_URL;
+unset UPSTREAM_URL;

@@ -32,4 +32,11 @@ for org in ${user_orgs}; do
     fi
 done
 
+unset org;
+unset gh_token;
+unset user_orgs;
+unset allowed_orgs;
+
 echo "vault_token='$vault_token'";
+
+unset vault_token;

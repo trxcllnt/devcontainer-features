@@ -15,13 +15,6 @@ source dev-container-features-test-lib
 >&2 echo "PATH=$PATH"
 >&2 echo "BASH_ENV=$BASH_ENV"
 
-CUDA_VERSION="$(\
-    apt policy cuda-compiler-12-0 2>/dev/null \
-  | grep -E 'Candidate: (.*).*$' - \
-  | cut -d':' -f2 \
-  | cut -d'-' -f1 \
-  | sort -rV | head -n1)";
-
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
 check "version" bash -c "echo '$CUDA_VERSION' | grep '12.0.0'"

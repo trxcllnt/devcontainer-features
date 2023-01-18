@@ -68,10 +68,28 @@ if [[ ! -L /usr/local/cuda ]]; then
     ln -s "/usr/local/cuda-${CUDAVERSION}" "/usr/local/cuda";
 fi
 
+cuda_ver=$(grep "#define CUDA_VERSION" /usr/local/cuda/include/cuda.h | cut -d' ' -f3);
+CUDA_VERSION_MAJOR=$((cuda_ver / 1000));
+CUDA_VERSION_MINOR=$((cuda_ver / 10 % 100));
+CUDA_VERSION_PATCH=$((cuda_ver % 10));
+CUDA_VERSION="$CUDA_VERSION_MAJOR.$CUDA_VERSION_MINOR.$CUDA_VERSION_PATCH";
+
 # Required for nvidia-docker v1
 echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf;
 echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf;
 
+if [[ "${TARGETARCH:-$(dpkg --print-architecture | awk -F'-' '{print $NF}')}" == amd64 ]]; then
+    NVARCH=x86_64;
+else
+    NVARCH=sbsa;
+fi
+
+echo "NVARCH=$NVARCH" >> /etc/environment;
+echo "CUDA_HOME=$CUDA_HOME" >> /etc/environment;
+echo "CUDA_VERSION=$CUDA_VERSION" >> /etc/environment;
+echo "CUDA_VERSION_MAJOR=$CUDA_VERSION_MAJOR" >> /etc/environment;
+echo "CUDA_VERSION_MINOR=$CUDA_VERSION_MINOR" >> /etc/environment;
+echo "CUDA_VERSION_PATCH=$CUDA_VERSION_PATCH" >> /etc/environment;
 echo "PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}" >> /etc/environment;
 echo "LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" >> /etc/environment;
 
@@ -80,7 +98,13 @@ mkdir -p /etc/profile.d
 cat <<EOF > /etc/profile.d/z-cuda.sh
 #! /usr/bin/env bash
 
+export NVARCH=$NVARCH;
 export CUDA_HOME="/usr/local/cuda";
+export CUDA_VERSION="$CUDA_VERSION";
+export CUDA_VERSION_MAJOR=$CUDA_VERSION_MAJOR;
+export CUDA_VERSION_MINOR=$CUDA_VERSION_MINOR;
+export CUDA_VERSION_PATCH=$CUDA_VERSION_PATCH;
+
 if [[ -z "\$PATH" || \$PATH != *"\${CUDA_HOME}/bin"* ]]; then
     export PATH="\${CUDA_HOME}/bin:\${PATH:+\$PATH:}";
 fi
@@ -96,6 +120,8 @@ chmod +x /etc/profile.d/z-cuda.sh
 
 cat <<EOF > /etc/bash.bash_env
 #! /usr/bin/env bash
+
+. /etc/environment;
 
 # Make non-interactive/non-login shells behave like interactive login shells
 if ! shopt -q login_shell; then

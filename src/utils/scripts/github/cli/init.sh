@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+set -euo pipefail;
+
 git_protocol=
 if [[ "${CODESPACES:-false}" == true ]]; then
     git_protocol="--git-protocol https";
@@ -22,7 +24,7 @@ select_required_scopes() {
     echo -n "$(echo -n "$need" | xargs -r -n1 -d' ' echo -n ' --scopes')";
 }
 
-scopes="$(select_required_scopes "user:email" "read:org")";
+scopes="$(select_required_scopes "read:org" ${@})";
 
 if [[ -n "$scopes" ]]; then
     for VAR in GH_TOKEN GITHUB_TOKEN; do
@@ -35,6 +37,7 @@ if [[ -n "$scopes" ]]; then
             unset ${VAR};
         fi
     done
+    unset VAR;
 fi
 
 if [[ $(gh auth status &>/dev/null; echo $?) != 0 ]]; then
@@ -44,6 +47,9 @@ elif [[ -n "$scopes" ]]; then
     echo "Logging into GitHub...";
     gh auth refresh --hostname github.com ${scopes};
 fi
+
+unset scopes;
+unset git_protocol;
 
 gh auth setup-git --hostname github.com;
 

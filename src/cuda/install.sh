@@ -79,11 +79,12 @@ echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf;
 echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf;
 
 if [[ "${TARGETARCH:-$(dpkg --print-architecture | awk -F'-' '{print $NF}')}" == amd64 ]]; then
-    echo "NVARCH=x86_64" >> /etc/environment;
+    NVARCH=x86_64;
 else
-    echo "NVARCH=sbsa" >> /etc/environment;
+    NVARCH=sbsa;
 fi
 
+echo "NVARCH=$NVARCH" >> /etc/environment;
 echo "CUDA_HOME=$CUDA_HOME" >> /etc/environment;
 echo "CUDA_VERSION=$CUDA_VERSION" >> /etc/environment;
 echo "CUDA_VERSION_MAJOR=$CUDA_VERSION_MAJOR" >> /etc/environment;
@@ -97,12 +98,12 @@ mkdir -p /etc/profile.d
 cat <<EOF > /etc/profile.d/z-cuda.sh
 #! /usr/bin/env bash
 
-export NVARCH;
-export CUDA_HOME;
-export CUDA_VERSION;
-export CUDA_VERSION_MAJOR;
-export CUDA_VERSION_MINOR;
-export CUDA_VERSION_PATCH;
+export NVARCH=$NVARCH;
+export CUDA_HOME="/usr/local/cuda";
+export CUDA_VERSION="$CUDA_VERSION";
+export CUDA_VERSION_MAJOR=$CUDA_VERSION_MAJOR;
+export CUDA_VERSION_MINOR=$CUDA_VERSION_MINOR;
+export CUDA_VERSION_PATCH=$CUDA_VERSION_PATCH;
 
 if [[ -z "\$PATH" || \$PATH != *"\${CUDA_HOME}/bin"* ]]; then
     export PATH="\${CUDA_HOME}/bin:\${PATH:+\$PATH:}";

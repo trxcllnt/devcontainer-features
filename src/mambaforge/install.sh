@@ -93,6 +93,8 @@ chmod +x /etc/profile.d/z-conda.sh;
 cat <<EOF > /etc/bash.bash_env
 #! /usr/bin/env bash
 
+. /etc/environment;
+
 # Make non-interactive/non-login shells behave like interactive login shells
 if ! shopt -q login_shell; then
     if [ -f /etc/profile ]; then

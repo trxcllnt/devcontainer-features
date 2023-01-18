@@ -24,7 +24,7 @@ select_required_scopes() {
     echo -n "$(echo -n "$need" | xargs -r -n1 -d' ' echo -n ' --scopes')";
 }
 
-scopes="$(select_required_scopes "user:email" "read:org")";
+scopes="$(select_required_scopes "read:org" ${@})";
 
 if [[ -n "$scopes" ]]; then
     for VAR in GH_TOKEN GITHUB_TOKEN; do

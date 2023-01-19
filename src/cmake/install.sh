@@ -25,7 +25,7 @@ if dpkg -s cmake > /dev/null 2>&1; then
     apt-get autoremove -y;
 fi
 
-check_packages wget ca-certificates bash-completion
+check_packages wget ca-certificates bash-completion pkg-config
 
 echo "Downloading CMake...";
 

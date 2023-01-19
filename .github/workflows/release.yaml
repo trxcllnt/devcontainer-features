@@ -12,8 +12,6 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v3
-        with:
-          persist-credentials: false
 
       - name: "Publish Features"
         uses: devcontainers/action@v1

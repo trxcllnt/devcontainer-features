@@ -3,8 +3,21 @@
 set -euo pipefail;
 
 git_protocol=
+avoid_gh_cli_ssh_keygen_prompt=
+
 if [[ "${CODESPACES:-false}" == true ]]; then
     git_protocol="--git-protocol https";
+else
+    ssh_result="$(ssh -T git@github.com 2>&1 || true)";
+    ssh_success="You've successfully authenticated, but GitHub does not provide shell access.";
+    if [[ "$(echo "$ssh_result" | grep -q "$ssh_success" &>/dev/null; echo $?)" == 0 ]]; then
+        git_protocol="--git-protocol ssh";
+        if type ssh-keygen > /dev/null 2>&1; then
+            avoid_gh_cli_ssh_keygen_prompt=1;
+        fi
+    fi
+    unset ssh_result;
+    unset ssh_success;
 fi
 
 select_required_scopes() {
@@ -31,7 +44,7 @@ if [[ -n "$scopes" ]]; then
         if [[ -n "$(eval "echo \${${VAR}:-}")" ]]; then
             for ENVFILE in /etc/profile "$HOME/.bashrc"; do
                 if [[ "$(grep -q -E "^${VAR}=$" "$ENVFILE" &>/dev/null; echo $?)" != 0 ]]; then
-                    echo "${VAR}=" | sudo tee -a "$ENVFILE" >/dev/null;
+                    echo "${VAR}=" | sudo tee -a "$ENVFILE" >/dev/null || true;
                 fi
             done
             unset ${VAR};
@@ -42,7 +55,15 @@ fi
 
 if [[ $(gh auth status &>/dev/null; echo $?) != 0 ]]; then
     echo "Logging into GitHub...";
+    ssh_keygen="$(which ssh-keygen || echo "")";
+    if [[ -n "$avoid_gh_cli_ssh_keygen_prompt" && -n "$ssh_keygen" ]]; then
+        sudo mv $ssh_keygen{,.bak} || true;
+    fi
     gh auth login --hostname github.com --web ${git_protocol} ${scopes};
+    if [[ -n "$avoid_gh_cli_ssh_keygen_prompt" && -n "$ssh_keygen" ]]; then
+        sudo mv $ssh_keygen{.bak,} || true;
+    fi
+    unset ssh_keygen;
 elif [[ -n "$scopes" ]]; then
     echo "Logging into GitHub...";
     gh auth refresh --hostname github.com ${scopes};

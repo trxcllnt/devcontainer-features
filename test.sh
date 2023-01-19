@@ -8,6 +8,7 @@ for image in $images; do
     features=()
     features+=("cmake")
     features+=("cuda")
+    features+=("gitlab-cli")
     features+=("llvm")
     features+=("mambaforge")
     features+=("ninja")

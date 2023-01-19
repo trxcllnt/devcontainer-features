@@ -155,9 +155,9 @@ elif type llvm-config &> /dev/null; then
 fi
 
 # Install curl, lldb, python3-minimal,libpython and rust dependencies if missing
-if ! dpkg -s curl ca-certificates gnupg2 ${lldb} python3-minimal gcc libc6-dev > /dev/null 2>&1; then
+if ! dpkg -s curl ca-certificates gnupg2 ${lldb} python3-minimal gcc libc6-dev libssl-dev > /dev/null 2>&1; then
     apt_get_update
-    apt-get -y install --no-install-recommends curl ca-certificates gcc libc6-dev
+    apt-get -y install --no-install-recommends curl ca-certificates gcc libc6-dev libssl-dev
     apt-get -y install ${lldb} python3-minimal libpython3.?
 fi
 

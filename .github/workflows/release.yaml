@@ -6,23 +6,27 @@ jobs:
   deploy:
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      packages: write
     steps:
       - uses: actions/checkout@v3
         with:
           persist-credentials: false
 
-      - id: publish_features
-        name: "Publish Features"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Publish Features"
         uses: devcontainers/action@v1
         with:
           publish-features: "true"
           base-path-to-features: "./src"
           generate-docs: "true"
 
-      - id: push_image_info
-        name: Create PR for Documentation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create PR for Documentation
+        id: push_image_info
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

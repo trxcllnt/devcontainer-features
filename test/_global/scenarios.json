@@ -1,5 +1,5 @@
 {
-  "cmake_cuda_llvm_ninja_nvhpc_sccache_mambaforge": {
+  "cmake_cuda_gitlabcli_llvm_ninja_nvhpc_sccache_mambaforge": {
     "image": "mcr.microsoft.com/devcontainers/base:jammy",
     "features": {
       "ghcr.io/devcontainers/features/git:1": {
@@ -7,6 +7,9 @@
       },
       "ghcr.io/devcontainers/features/git-lfs:1": {},
       "ghcr.io/devcontainers/features/github-cli:1": {},
+      "gitlab-cli": {
+        "version": "latest"
+      },
       "cmake": {
         "cmakeVersion": "3.25.1"
       },
@@ -30,6 +33,7 @@
       }
     },
     "overrideFeatureInstallOrder": [
+      "./gitlab-cli",
       "./cmake",
       "./ninja",
       "./sccache",

@@ -19,6 +19,7 @@ jobs:
         features:
           - cmake
           - cuda
+          - gitlab-cli
           - llvm
           - mambaforge
           - ninja

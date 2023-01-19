@@ -2,10 +2,13 @@
 
 set -euo pipefail;
 
+if [[ -z "${VAULT_HOST:-}" ]]; then
+    exit 0;
+fi
+
 # Login to vault
 
 vault_token=null;
-VAULT_HOST="${VAULT_HOST:-https://vault.ops.k8s.rapids.ai}"
 
 echo ""
 echo "Attempting to use your GitHub account to authenticate";

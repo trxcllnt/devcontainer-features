@@ -68,6 +68,8 @@ if [[ ! -L /usr/local/cuda ]]; then
     ln -s "/usr/local/cuda-${CUDAVERSION}" "/usr/local/cuda";
 fi
 
+CUDA_HOME="/usr/local/cuda";
+
 cuda_ver=$(grep "#define CUDA_VERSION" /usr/local/cuda/include/cuda.h | cut -d' ' -f3);
 CUDA_VERSION_MAJOR=$((cuda_ver / 1000));
 CUDA_VERSION_MINOR=$((cuda_ver / 10 % 100));
@@ -83,6 +85,7 @@ if [[ "${TARGETARCH:-$(dpkg --print-architecture | awk -F'-' '{print $NF}')}" ==
 else
     NVARCH=sbsa;
 fi
+
 
 echo "NVARCH=$NVARCH" >> /etc/environment;
 echo "CUDA_HOME=$CUDA_HOME" >> /etc/environment;
@@ -100,8 +103,8 @@ cat <<EOF > /etc/profile.d/z-cuda.sh
 #! /usr/bin/env bash
 
 export NVARCH=$NVARCH;
-export CUDA_HOME="/usr/local/cuda";
-export CUDA_VERSION="$CUDA_VERSION";
+export CUDA_HOME=$CUDA_HOME;
+export CUDA_VERSION=$CUDA_VERSION;
 export CUDA_VERSION_MAJOR=$CUDA_VERSION_MAJOR;
 export CUDA_VERSION_MINOR=$CUDA_VERSION_MINOR;
 export CUDA_VERSION_PATCH=$CUDA_VERSION_PATCH;

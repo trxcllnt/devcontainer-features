@@ -11,7 +11,7 @@ if [[ -z "$(git config --get pull.rebase)" ]]; then
 fi
 
 if [[ -z "$(git config --get user.name)" ]]; then
-    . /opt/devcontainer/bin/github/cli/init.sh "user:email";
+    . /opt/devcontainer/bin/github/cli/init.sh;
     git_user_name="$(gh api user --jq '.name')";
     if [[ $? != 0 ]]; then git_user_name=""; fi;
     if [[ -z "$git_user_name" && -t 0 && "${CODESPACES:-false}" != true ]]; then
@@ -22,7 +22,7 @@ if [[ -z "$(git config --get user.name)" ]]; then
 fi
 
 if [[ -z "$(git config --get user.email)" ]]; then
-    . /opt/devcontainer/bin/github/cli/init.sh "user:email";
+    . /opt/devcontainer/bin/github/cli/init.sh;
     git_user_email="$(gh api user/emails --jq '. | map(select(.primary == true)) | map(.email)[]')";
     if [[ $? != 0 ]]; then git_user_email=""; fi;
     if [[ -z "$git_user_email" && -t 0 && "${CODESPACES:-false}" != true ]]; then

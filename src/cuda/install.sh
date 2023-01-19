@@ -91,6 +91,7 @@ echo "CUDA_VERSION_MAJOR=$CUDA_VERSION_MAJOR" >> /etc/environment;
 echo "CUDA_VERSION_MINOR=$CUDA_VERSION_MINOR" >> /etc/environment;
 echo "CUDA_VERSION_PATCH=$CUDA_VERSION_PATCH" >> /etc/environment;
 echo "PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}" >> /etc/environment;
+echo "LD_LIBRARY_PATH=/usr/local/cuda/compat${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" >> /etc/environment;
 echo "LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" >> /etc/environment;
 
 mkdir -p /etc/profile.d

@@ -1,13 +1,13 @@
 
-# GitHub CLI (github-cli)
+# GitLab CLI (gitlab-cli)
 
-Installs the GitHub CLI. Auto-detects latest version and installs needed dependencies.
+Installs the GitLab CLI. Auto-detects latest version and installs needed dependencies.
 
 ## Example Usage
 
 ```json
 "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+    "ghcr.io/trxcllnt/devcontainer-features/gitlab-cli:1": {}
 }
 ```
 
@@ -15,8 +15,7 @@ Installs the GitHub CLI. Auto-detects latest version and installs needed depende
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| version | Select version of the GitHub CLI, if not latest. | string | latest |
-| installDirectlyFromGitHubRelease | - | boolean | true |
+| version | Select version of the GitLab CLI, if not latest. | string | latest |
 
 
 
@@ -29,4 +28,4 @@ This Feature should work on recent versions of Debian/Ubuntu-based distributions
 
 ---
 
-_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/devcontainers/features/blob/main/src/github-cli/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
+_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/trxcllnt/devcontainer-features/blob/main/src/gitlab-cli/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._

@@ -1,5 +1,11 @@
 #! /usr/bin/env bash
 
+if [[ -f /tmp/post-attach-command-sh-ran-already ]]; then
+    exit 0;
+fi
+
+touch /tmp/post-attach-command-sh-ran-already;
+
 /opt/devcontainer/bin/git/init.sh;
 /opt/devcontainer/bin/vault/s3/init.sh;
 

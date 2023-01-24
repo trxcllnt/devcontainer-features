@@ -1,6 +1,6 @@
 {
   "id": "gitlab-cli",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "name": "GitLab CLI",
   "documentationURL": "https://github.com/trxcllnt/devcontainer-features/tree/main/src/gitlab-cli",
   "description": "Installs the GitLab CLI. Auto-detects latest version and installs needed dependencies.",

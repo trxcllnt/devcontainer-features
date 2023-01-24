@@ -7,7 +7,7 @@
 #     --base-image mcr.microsoft.com/devcontainers/base:jammy .'
 # ```
 
-set -ex
+set -e
 
 # Optional: Import test library bundled with the devcontainer CLI
 source dev-container-features-test-lib

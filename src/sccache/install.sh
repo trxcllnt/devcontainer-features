@@ -1,50 +1,29 @@
 #! /usr/bin/env bash
-set -ex
+set -e
 
-apt_get_update()
-{
-    if [ "$(find /var/lib/apt/lists/* | wc -l)" = "0" ]; then
-        echo "Running apt-get update..."
-        apt-get update -y;
-    fi
-}
+SCCACHE_VERSION="${VERSION:-latest}";
 
-# Checks if packages are installed and installs them if not
-check_packages() {
-    if ! dpkg -s "$@" > /dev/null 2>&1; then
-        apt_get_update
-        echo "Installing prerequisites: $@";
-        DEBIAN_FRONTEND=noninteractive \
-        apt-get -y install --no-install-recommends "$@"
-    fi
-}
+# Ensure we're in this feature's directory during build
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 
-if dpkg -s sccache > /dev/null 2>&1; then
-    echo "Uninstalling existing sccache...";
-    apt-get remove -y sccache;
-    apt-get autoremove -y;
-fi
+# install global/common scripts
+. ./common/install.sh;
 
-check_packages wget ca-certificates bash-completion
+check_packages jq wget ca-certificates bash-completion;
 
 echo "Installing sccache...";
 
-SCCACHE_VERSION=${SCCACHEVERSION:-latest}
-
 if [ $SCCACHE_VERSION == latest ]; then
-    check_packages jq;
-    SCCACHE_VERSION=;
-    while [[ -z $SCCACHE_VERSION ]]; do
-        sleep $(($RANDOM % 60));
-        SCCACHE_VERSION="$(wget --no-hsts -q -O- https://api.github.com/repos/mozilla/sccache/releases/latest | jq -r ".tag_name" | tr -d 'v')";
-    done
+    find_version_from_git_tags SCCACHE_VERSION https://github.com/mozilla/sccache;
 fi
 
 # Install sccache
 wget --no-hsts -q -O- "https://github.com/mozilla/sccache/releases/download/v$SCCACHE_VERSION/sccache-v$SCCACHE_VERSION-$(uname -p)-unknown-linux-musl.tar.gz" \
     | tar -C /usr/bin -zf - --wildcards --strip-components=1 -x */sccache \
- && chmod +x /usr/bin/sccache
+ && chmod +x /usr/bin/sccache;
 
-rm -rf /var/tmp/* \
-       /var/cache/apt/* \
-       /var/lib/apt/lists/*;
+# Clean up
+rm -rf "/tmp/*";
+rm -rf "/var/tmp/*";
+rm -rf "/var/cache/apt/*";
+rm -rf "/var/lib/apt/lists/*";

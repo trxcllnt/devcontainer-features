@@ -1,10 +1,10 @@
 {
   "name": "sccache",
   "id": "sccache",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "description": "A feature to install sccache",
   "options": {
-    "sccacheVersion": {
+    "version": {
       "type": "string",
       "proposals": [
         "latest",
@@ -15,5 +15,10 @@
       "default": "latest",
       "description": "sccache version to install."
     }
+  },
+  "containerEnv": {
+    "CMAKE_C_COMPILER_LAUNCHER": "/usr/bin/sccache",
+    "CMAKE_CXX_COMPILER_LAUNCHER": "/usr/bin/sccache",
+    "CMAKE_CUDA_COMPILER_LAUNCHER": "/usr/bin/sccache"
   }
 }

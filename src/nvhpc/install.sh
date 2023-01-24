@@ -1,25 +1,11 @@
 #! /usr/bin/env bash
-set -ex
+set -e
 
-nvhpc_ver=${NVHPCVERSION/./-}
+# Ensure we're in this feature's directory during build
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 
-apt_get_update()
-{
-    if [ "$(find /var/lib/apt/lists/* | wc -l)" = "0" ]; then
-        echo "Running apt-get update..."
-        apt-get update -y;
-    fi
-}
-
-# Checks if packages are installed and installs them if not
-check_packages() {
-    if ! dpkg -s "$@" > /dev/null 2>&1; then
-        apt_get_update
-        echo "Installing prerequisites: $@";
-        DEBIAN_FRONTEND=noninteractive \
-        apt-get -y install --no-install-recommends "$@"
-    fi
-}
+# install global/common scripts
+. ./common/install.sh;
 
 check_packages                  \
     gpg                         \
@@ -28,37 +14,42 @@ check_packages                  \
     dpkg-dev                    \
     apt-utils                   \
     lsb-release                 \
+    gettext-base                \
     bash-completion             \
     ca-certificates             \
     apt-transport-https         \
     software-properties-common  \
     ;
 
+# Ensure lmod preceeds nvhpc's profile init
+mv /etc/profile.d/{,90-}lmod.sh;
+
 echo "Downloading NVHPC gpg key...";
 
 wget --no-hsts -q -O- https://developer.download.nvidia.com/hpc-sdk/ubuntu/DEB-GPG-KEY-NVIDIA-HPC-SDK \
-   | gpg --dearmor -o /etc/apt/trusted.gpg.d/nvidia-hpcsdk-archive-keyring.gpg
+   | gpg --dearmor -o /etc/apt/trusted.gpg.d/nvidia-hpcsdk-archive-keyring.gpg;
 
 chmod 0644 /etc/apt/trusted.gpg.d/*.gpg || true;
 
-echo "Adding NVHPC SDK apt repository..."
+echo "Adding NVHPC SDK apt repository...";
 
 # Install NVHPC-SDK apt repository
 apt-add-repository -y "deb https://developer.download.nvidia.com/hpc-sdk/ubuntu/$(dpkg-architecture -q DEB_BUILD_ARCH) /";
 
-echo "Installing NVHPC SDK..."
+echo "Installing NVHPC SDK...";
+
+NVHPC_VERSION="${VERSION:-${NVHPCVERSION:-}}";
 
 DEBIAN_FRONTEND=noninteractive              \
 apt-get install -y --no-install-recommends  \
-    nvhpc-${nvhpc_ver}                      \
+    nvhpc-${NVHPC_VERSION/./-}              \
     ;
 
-nvhpc_ver=${NVHPCVERSION}
-
-NVHPC="/opt/nvidia/hpc_sdk"
-NVHPC_VERSION="${nvhpc_ver}"
-NVHPC_ROOT="${NVHPC}/Linux_$(uname -p)/${nvhpc_ver}"
-NVHPC_CUDA_HOME="${CUDA_HOME:-$NVHPC_ROOT/cuda}"
+export NVHPC="/opt/nvidia/hpc_sdk";
+export NVHPC_VERSION="${NVHPC_VERSION}";
+export NVHPC_ROOT="${NVHPC}/Linux_$(uname -p)/${NVHPC_VERSION}";
+export NVHPC_CUDA_HOME="${CUDA_HOME:-$NVHPC_ROOT/cuda}";
+export LIBRARY_PATH="${LIBRARY_PATH:-$NVHPC_ROOT/cuda/lib64/stubs}";
 
 bash "${NVHPC_ROOT}/compilers/bin/makelocalrc" \
     -x "${NVHPC_ROOT}/compilers/bin" \
@@ -66,51 +57,22 @@ bash "${NVHPC_ROOT}/compilers/bin/makelocalrc" \
     -gpp "$(which g++)" \
     -g77 "$(which gfortran)"
 
-# Install NVHPC modules
-rm -rf /usr/share/lmod/lmod/modulefiles;
-ln -sf "${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles" /usr/share/lmod/lmod/modulefiles;
+# export envvars in bashrc files
+append_to_etc_bashrc "$(cat .bashrc | envsubst)";
+append_to_all_bashrcs "$(cat .bashrc | envsubst)";
 
-mkdir -p /etc/profile.d
-
-cat <<EOF >> /etc/profile.d/z-nvhpc.sh
+cat<<EOF | tee /etc/profile.d/91-nvhpc.sh >/dev/null && chmod +x /etc/profile.d/91-nvhpc.sh
 #! /usr/bin/env bash
 
-export NVHPC="${NVHPC}";
-export NVHPC_ROOT="${NVHPC_ROOT}";
-export NVHPC_VERSION="${NVHPC_VERSION}";
-export NVHPC_CUDA_HOME="${NVHPC_CUDA_HOME}";
+# export envvars
+$(cat .bashrc | envsubst)
 
-module use "\${NVHPC}/modulefiles";
-module use "\${NVHPC_ROOT}/comm_libs/hpcx/latest/modulefiles";
-module try-load nvhpc-nompi/\${NVHPC_VERSION};
-module try-load nvhpc-nompi;
-module try-load hpcx-mt;
-module try-load hpcx;
+# Activate nvhpc modules when /etc/profile is run
+$(cat etc/profile.d/91-nvhpc.sh)
 EOF
 
-chmod +x /etc/profile.d/z-nvhpc.sh
-
-cat <<EOF > /etc/bash.bash_env
-#! /usr/bin/env bash
-
-. /etc/environment;
-
-# Make non-interactive/non-login shells behave like interactive login shells
-if ! shopt -q login_shell; then
-    if [ -f /etc/profile ]; then
-        . /etc/profile
-    fi
-    for x in \$HOME/.{bash_profile,bash_login,profile}; do
-        if [ -f \$x ]; then
-            . \$x
-            break
-        fi
-    done
-fi
-EOF
-
-chmod +x /etc/bash.bash_env
-
-rm -rf /var/tmp/* \
-       /var/cache/apt/* \
-       /var/lib/apt/lists/*;
+# Clean up
+rm -rf "/tmp/*";
+rm -rf "/var/tmp/*";
+rm -rf "/var/cache/apt/*";
+rm -rf "/var/lib/apt/lists/*";

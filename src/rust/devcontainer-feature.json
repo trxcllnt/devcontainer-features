@@ -1,8 +1,8 @@
 {
   "id": "rust",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "name": "Rust",
-  "documentationURL": "https://github.com/devcontainers/features/tree/main/src/rust",
+  "documentationURL": "https://github.com/trxcllnt/devcontainer-features/tree/main/src/rust",
   "description": "Installs Rust, common Rust utilities, and their required dependencies",
   "options": {
     "version": {
@@ -26,24 +26,14 @@
       ],
       "default": "minimal",
       "description": "Select a rustup install profile."
-    }
-  },
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "vadimcn.vscode-lldb",
-        "mutantdino.resourcemonitor",
-        "rust-lang.rust-analyzer",
-        "tamasfe.even-better-toml",
-        "serayuzgur.crates"
-      ],
-      "settings": {
-        "lldb.executable": "/usr/bin/lldb",
-        "files.watcherExclude": {
-          "**/target/**": true
-        },
-        "rust-analyzer.checkOnSave.command": "clippy"
-      }
+    },
+    "updateRc": {
+      "type": "boolean",
+      "default": true
+    },
+    "updateRust": {
+      "type": "boolean",
+      "default": false
     }
   },
   "containerEnv": {
@@ -58,6 +48,25 @@
     "seccomp=unconfined"
   ],
   "installsAfter": [
-    "ghcr.io/devcontainers/features/common-utils"
-  ]
+    "ghcr.io/devcontainers/features/common-utils",
+    "ghcr.io/devcontainers/features/git"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vadimcn.vscode-lldb",
+        "mutantdino.resourcemonitor",
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "serayuzgur.crates"
+      ],
+      "settings": {
+        "files.watcherExclude": {
+          "**/target/**": true
+        },
+        "rust-analyzer.checkOnSave": true,
+        "rust-analyzer.check.command": "clippy"
+      }
+    }
+  }
 }

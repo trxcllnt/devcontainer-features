@@ -3,7 +3,7 @@
     "image": "mcr.microsoft.com/devcontainers/base:jammy",
     "features": {
       "llvm": {
-        "llvmVersion": "15"
+        "version": "15"
       },
       "rust": {
         "version": "1.62.0"

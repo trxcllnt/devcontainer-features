@@ -3,7 +3,7 @@
     "image": "mcr.microsoft.com/devcontainers/base:jammy",
     "features": {
       "llvm": {
-        "llvmVersion": "15"
+        "version": "15"
       }
     }
   },
@@ -11,7 +11,7 @@
     "image": "mcr.microsoft.com/devcontainers/base:jammy",
     "features": {
       "llvm": {
-        "llvmVersion": "16"
+        "version": "16"
       }
     }
   }

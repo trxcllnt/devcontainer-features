@@ -1,117 +1,64 @@
 #! /usr/bin/env bash
-set -ex
+set -e
 
-apt_get_update()
-{
-    if [ "$(find /var/lib/apt/lists/* | wc -l)" = "0" ]; then
-        echo "Running apt-get update..."
-        apt-get update -y;
-    fi
-}
+MAMBAFORGE_VERSION="${VERSION:-latest}";
 
-# Checks if packages are installed and installs them if not
-check_packages() {
-    if ! dpkg -s "$@" > /dev/null 2>&1; then
-        apt_get_update
-        echo "Installing prerequisites: $@";
-        DEBIAN_FRONTEND=noninteractive \
-        apt-get -y install --no-install-recommends "$@"
-    fi
-}
+# Ensure we're in this feature's directory during build
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 
-check_packages git wget bzip2 ca-certificates bash-completion
+# install global/common scripts
+. ./common/install.sh;
+
+check_packages jq git wget bzip2 ca-certificates bash-completion;
 
 echo "Downloading Mambaforge...";
 
-MAMBAFORGE_VERSION=${MAMBAFORGEVERSION:-latest}
-
-if [ $MAMBAFORGE_VERSION == latest ]; then
-    check_packages jq;
-    MAMBAFORGE_VERSION=;
-    while [[ -z $MAMBAFORGE_VERSION ]]; do
-        sleep $(($RANDOM % 60));
-        MAMBAFORGE_VERSION="$(wget --no-hsts -q -O- https://api.github.com/repos/conda-forge/miniforge/releases/latest | jq -r ".tag_name" | tr -d 'v')";
-    done
+if [[ "$MAMBAFORGE_VERSION" == latest ]]; then
+    find_version_from_git_tags MAMBAFORGE_VERSION https://github.com/conda-forge/miniforge "tags/" "." "-[0-9]+" "true";
 fi
 
 wget --no-hsts -q -O /tmp/miniforge.sh \
-    https://github.com/conda-forge/miniforge/releases/download/${MAMBAFORGE_VERSION}/Mambaforge-${MAMBAFORGE_VERSION}-Linux-$(uname -p).sh
+    https://github.com/conda-forge/miniforge/releases/download/${MAMBAFORGE_VERSION}/Mambaforge-${MAMBAFORGE_VERSION}-Linux-$(uname -p).sh;
 
 echo "Installing Mambaforge...";
 
 # Install miniconda
-/bin/bash /tmp/miniforge.sh -b -p ${CONDADIR}
+/bin/bash /tmp/miniforge.sh -b -p /opt/conda;
 
-export PATH="${CONDADIR}/bin:${PATH:+$PATH:}";
+export PATH="/opt/conda/bin:${PATH}";
 
 conda clean --tarballs --index-cache --packages --yes;
-find ${CONDADIR} -follow -type f -name '*.a' -delete;
-find ${CONDADIR} -follow -type f -name '*.pyc' -delete;
+find /opt/conda -follow -type f -name '*.a' -delete;
+find /opt/conda -follow -type f -name '*.pyc' -delete;
 conda clean --force-pkgs-dirs --all --yes;
 
-mkdir -p /etc/profile.d;
+# Activate conda in /etc/bash.bashrc
+append_to_etc_bashrc "$(cat .bashrc)";
+# Activate conda in ~/.bashrc
+append_to_all_bashrcs "$(cat .bashrc)";
 
-cat <<EOF > ${CONDADIR}/bashrc-snippet.sh
-MAMBA_NO_BANNER=1;
-if [[ -z "\$PATH" || \$PATH != *${CONDADIR}/bin* ]]; then
-    PATH="${CONDADIR}/bin:\${PATH:+\$PATH:}";
+# Update the devcontainers/features/common-utils __bash_prompt fn
+# to insert ${CONDA_PROMPT_MODIFIER} into the dev container's PS1
+for_each_user_bashrc '
+if [[ "$(grep -q "# Codespaces bash prompt theme" "$0"; echo $?)" == 0 ]]; then
+    sed -i -re "s@PS1=\"(\\\$\{userpart\} )@PS1=\"\${CONDA_PROMPT_MODIFIER:-}\1@g" "$0";
 fi
-. /opt/conda/etc/profile.d/conda.sh;
-for env_name in \${DEFAULT_CONDA_ENV:-base} \${CONDA_DEFAULT_ENV:-base} base; do
-    if [[ \${CONDA_PREFIX:-} == */\$env_name ]]; then break; fi
-    conda activate "\$env_name" 2>/dev/null && break || continue;
-done;
-EOF
+';
 
-cat <<EOF > /etc/profile.d/z-conda.sh
-#! /usr/bin/env bash
+# Update the `__conda_activate` shell function to make a symlink named
+# /tmp/.current-conda-env point to the new "$CONDA_PREFIX" each time they
+# execute `conda activate <env>` or `conda deactivate`.
+#
+# We need a stable absolute path for the dev container's Python extension
+# settings (defined in devcontainer-feature.json).
+sed -i \
+    's/\(shell.posix "$@")\)/\1 \&\& sudo ln -nsf "\\${CONDA_PREFIX:-\/opt\/conda}" \/tmp\/.current-conda-env/' \
+    /opt/conda/etc/profile.d/conda.sh;
 
-export MAMBA_NO_BANNER=1;
+ln -s /opt/conda /tmp/.current-conda-env;
 
-if [[ -z "\$PATH" || \$PATH != *"${CONDADIR}/bin"* ]]; then
-    export PATH="${CONDADIR}/bin:\${PATH:+\$PATH:}";
-fi
-
-if [[ -f "\$HOME/.bashrc" ]]; then
-    # Add "conda activate base" to ~/.bashrc
-    if [[ "\$(grep -q ". ${CONDADIR}/etc/profile.d/conda.sh" "\$HOME/.bashrc"; echo \$?)" != 0 ]]; then
-        if [[ "\$(grep -q "# Codespaces bash prompt theme" "\$HOME/.bashrc"; echo \$?)" == 0 ]]; then
-            # Activate conda before the codespaces bash prompt sets PS1
-            conda_activate_snippet="\$(printf %q "\$(cat "${CONDADIR}/bashrc-snippet.sh")" | cut -b1 --complement | cut -d\' -f2)";
-            sed -i "/^# Codespaces bash prompt theme\\\$/i \${conda_activate_snippet}\n" "\$HOME/.bashrc";
-            # Insert the conda env name into codespaces' modified PS1
-            sed -i -re 's@PS1="(\\\$\{userpart\} )@PS1="\${CONDA_PROMPT_MODIFIER:-}\1@g' "\$HOME/.bashrc";
-        else
-            cat "${CONDADIR}/bashrc-snippet.sh" >>  "\$HOME/.bashrc";
-        fi
-    fi
-fi
-EOF
-
-chmod +x /etc/profile.d/z-conda.sh;
-
-cat <<EOF > /etc/bash.bash_env
-#! /usr/bin/env bash
-
-. /etc/environment;
-
-# Make non-interactive/non-login shells behave like interactive login shells
-if ! shopt -q login_shell; then
-    if [ -f /etc/profile ]; then
-        . /etc/profile
-    fi
-    for x in \$HOME/.{bash_profile,bash_login,profile}; do
-        if [ -f \$x ]; then
-            . \$x
-            break
-        fi
-    done
-fi
-EOF
-
-chmod +x /etc/bash.bash_env;
-
-rm -rf /var/tmp/* \
-       /var/cache/apt/* \
-       /var/lib/apt/lists/* \
-       /tmp/miniforge.sh;
+# Clean up
+rm -rf "/tmp/*";
+rm -rf "/var/tmp/*";
+rm -rf "/var/cache/apt/*";
+rm -rf "/var/lib/apt/lists/*";

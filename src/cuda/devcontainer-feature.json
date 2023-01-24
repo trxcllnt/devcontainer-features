@@ -1,10 +1,10 @@
 {
   "name": "CUDA Toolkit",
   "id": "cuda",
-  "version": "1.0.14",
+  "version": "2.0.0",
   "description": "A feature to install the NVIDIA CUDA Toolkit",
   "options": {
-    "cudaVersion": {
+    "version": {
       "type": "string",
       "proposals": [
         "12.0",
@@ -21,6 +21,44 @@
     }
   },
   "containerEnv": {
-    "BASH_ENV": "/etc/bash.bash_env"
+    "BASH_ENV": "/etc/bash.bash_env",
+    "CUDA_HOME": "/usr/local/cuda",
+    "NVIDIA_VISIBLE_DEVICES": "all",
+    "NVIDIA_DRIVER_CAPABILITIES": "all",
+    "PATH": "/usr/local/nvidia/bin:${CUDA_HOME}/bin:${PATH}",
+    "LIBRARY_PATH": "${CUDA_HOME}/lib64/stubs",
+    "LD_LIBRARY_PATH": "/usr/local/nvidia/lib:/usr/local/nvidia/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  },
+  "capAdd": [
+    "SYS_PTRACE"
+  ],
+  "securityOpt": [
+    "seccomp=unconfined"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "nvidia.nsight-vscode-edition"
+      ],
+      "settings": {
+        "files.associations": {
+          "*.cu": "cuda-cpp",
+          "*.cuh": "cuda-cpp",
+          "**/libcudacxx/include/**/*": "cpp",
+          "**/libcudacxx-src/include/**/*": "cpp"
+        },
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash",
+            "icon": "terminal-bash",
+            "args": [
+              "-li"
+            ]
+          }
+        },
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
   }
 }

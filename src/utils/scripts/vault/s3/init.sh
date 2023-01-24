@@ -2,24 +2,32 @@
 
 set -euo pipefail;
 
+# Attempt to retrieve temporary AWS credentials from a vault
+# instance using GitHub OAuth.
+
 if [[ -z "${VAULT_HOST:-}" ]]; then
     exit 0;
 fi
 
-# Login to vault
+# Initialize the GitHub CLI with the appropriate user scopes
+. /opt/devcontainer/bin/github/cli/init.sh;
 
-vault_token=null;
+# Check whether the user is in one of the allowed GitHub orgs
+eval "$(/opt/devcontainer/bin/vault/s3/orgs.sh "$VAULT_HOST")";
+
+if [[ -z "${user_orgs:-}" ]]; then
+    exit 0;
+fi
 
 echo ""
 echo "Attempting to use your GitHub account to authenticate";
 echo "with vault at '$VAULT_HOST'.";
 echo ""
 
-# Initialize the GitHub CLI with the appropriate user scopes
-. /opt/devcontainer/bin/github/cli/init.sh;
+vault_token=null;
 
 # Attempt to authenticate with GitHub
-eval "$(/opt/devcontainer/bin/vault/auth/github.sh "$VAULT_HOST")";
+eval "$(/opt/devcontainer/bin/vault/auth/github.sh "$VAULT_HOST" ${user_orgs})";
 
 if [[ "${vault_token:-null}" == null ]]; then
     echo "Your GitHub user was not recognized by vault. Exiting." >&2;
@@ -29,17 +37,17 @@ fi
 echo "Successfully authenticated with vault!";
 
 # Generate temporary AWS creds
-ttl="ttl=43200s";
+# todo: This should work but isn't
+# -d "{\"ttl\": \"43200s\"}"          \
 aws_creds="$(                               \
     curl -s                                 \
         -X POST                             \
         -H "X-Vault-Token: $vault_token"    \
         -H "Content-Type: application/json" \
-        "$VAULT_HOST/v1/aws/sts/devs?$ttl"  \
+        "$VAULT_HOST/v1/aws/sts/devs"       \
   | jq -r '.data'                           \
 )";
 
-unset ttl;
 unset vault_token;
 
 aws_role_arn="$(echo "$aws_creds" | jq -r '.arn')";

@@ -1,15 +1,10 @@
 {
   "name": "Mambaforge",
   "id": "mambaforge",
-  "version": "1.0.10",
+  "version": "2.0.0",
   "description": "A feature to install mambaforge",
   "options": {
-    "condaDir": {
-      "type": "string",
-      "default": "/opt/conda",
-      "description": "Conda install dir."
-    },
-    "mambaforgeVersion": {
+    "version": {
       "type": "string",
       "proposals": [
         "latest",
@@ -20,6 +15,39 @@
     }
   },
   "containerEnv": {
+    "MAMBA_NO_BANNER": "1",
     "BASH_ENV": "/etc/bash.bash_env"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ],
+      "settings": {
+        "python.linting.enabled": true,
+        "python.terminal.activateEnvironment": false,
+        "python.defaultInterpreterPath": "/tmp/.current-conda-env/bin/python",
+        "python.formatting.autopep8Path": "/tmp/.current-conda-env/bin/autopep8",
+        "python.formatting.blackPath": "/tmp/.current-conda-env/bin/black",
+        "python.formatting.yapfPath": "/tmp/.current-conda-env/bin/yapf",
+        "python.linting.banditPath": "/tmp/.current-conda-env/bin/bandit",
+        "python.linting.flake8Path": "/tmp/.current-conda-env/bin/flake8",
+        "python.linting.mypyPath": "/tmp/.current-conda-env/bin/mypy",
+        "python.linting.pycodestylePath": "/tmp/.current-conda-env/bin/pycodestyle",
+        "python.linting.pydocstylePath": "/tmp/.current-conda-env/bin/pydocstyle",
+        "python.linting.pylintPath": "/tmp/.current-conda-env/bin/pylint",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash",
+            "icon": "terminal-bash",
+            "args": [
+              "-li"
+            ]
+          }
+        },
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
   }
 }

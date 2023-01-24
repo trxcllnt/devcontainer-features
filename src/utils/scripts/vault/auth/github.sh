@@ -5,18 +5,8 @@ set -euo pipefail;
 vault_token=null;
 
 VAULT_HOST="$1";
+user_orgs="${@:2}";
 gh_token="$(gh auth token)";
-
-allowed_orgs="${VAULT_GITHUB_ORGS:-nvidia nv-legate rapids}";
-allowed_orgs="${allowed_orgs// /|}";
-
-user_orgs="$(                                    \
-    gh api                                       \
-        user/orgs                                \
-        --jq '.[].login'                         \
-        -H "Accept: application/vnd.github+json" \
-  | grep --color=never -E "($allowed_orgs)"      \
-)";
 
 for org in ${user_orgs}; do
     vault_token="$(                                   \
@@ -34,8 +24,6 @@ done
 
 unset org;
 unset gh_token;
-unset user_orgs;
-unset allowed_orgs;
 
 echo "vault_token='$vault_token'";
 

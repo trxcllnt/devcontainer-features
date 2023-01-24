@@ -7,7 +7,7 @@ Installs Rust, common Rust utilities, and their required dependencies
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/rust:1": {}
+    "ghcr.io/trxcllnt/devcontainer-features/rust:2": {}
 }
 ```
 
@@ -17,6 +17,8 @@ Installs Rust, common Rust utilities, and their required dependencies
 |-----|-----|-----|-----|
 | version | Select or enter a version of Rust to install. | string | latest |
 | profile | Select a rustup install profile. | string | minimal |
+| updateRc | - | boolean | true |
+| updateRust | - | boolean | false |
 
 
 

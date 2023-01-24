@@ -7,7 +7,7 @@ Installs the GitLab CLI. Auto-detects latest version and installs needed depende
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/gitlab-cli:1": {}
+    "ghcr.io/trxcllnt/devcontainer-features/gitlab-cli:2": {}
 }
 ```
 

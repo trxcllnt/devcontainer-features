@@ -7,7 +7,7 @@ A feature to install CMake
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/cmake:1": {}
+    "ghcr.io/trxcllnt/devcontainer-features/cmake:2": {}
 }
 ```
 
@@ -15,7 +15,7 @@ A feature to install CMake
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| cmakeVersion | CMake version to install. | string | latest |
+| version | CMake version to install. | string | latest |
 
 
 

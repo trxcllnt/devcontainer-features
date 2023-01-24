@@ -1,13 +1,13 @@
 
-# Devcontainer Utils (utils)
+# devcontainer utils (utils)
 
-A feature to install Devcontainer utility scripts
+A feature to install my devcontainer utilities
 
 ## Example Usage
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/utils:1": {}
+    "ghcr.io/trxcllnt/devcontainer-features/utils:2": {}
 }
 ```
 

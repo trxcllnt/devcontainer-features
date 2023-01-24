@@ -7,7 +7,7 @@ A feature to install the NVIDIA CUDA Toolkit
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/cuda:1": {}
+    "ghcr.io/trxcllnt/devcontainer-features/cuda:2": {}
 }
 ```
 
@@ -15,7 +15,7 @@ A feature to install the NVIDIA CUDA Toolkit
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| cudaVersion | Version of the CUDA Toolkit to install. | string | 12.0 |
+| version | Version of the CUDA Toolkit to install. | string | 12.0 |
 
 
 

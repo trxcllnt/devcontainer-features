@@ -7,7 +7,7 @@ A feature to install LLVM compilers and tools
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/llvm:1": {}
+    "ghcr.io/trxcllnt/devcontainer-features/llvm:2": {}
 }
 ```
 
@@ -15,7 +15,7 @@ A feature to install LLVM compilers and tools
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| llvmVersion | LLVM version to install. | string | dev |
+| version | LLVM version to install. | string | dev |
 
 
 

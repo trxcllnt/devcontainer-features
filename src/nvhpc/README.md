@@ -7,7 +7,7 @@ A feature to install the NVHPC SDK
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/nvhpc:1": {}
+    "ghcr.io/trxcllnt/devcontainer-features/nvhpc:2": {}
 }
 ```
 
@@ -15,7 +15,7 @@ A feature to install the NVHPC SDK
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| nvhpcVersion | Version of NVHPC SDK to install. | string | 22.11 |
+| version | Version of NVHPC SDK to install. | string | 22.11 |
 
 
 

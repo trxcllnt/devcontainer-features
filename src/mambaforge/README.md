@@ -7,7 +7,7 @@ A feature to install mambaforge
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/mambaforge:1": {}
+    "ghcr.io/trxcllnt/devcontainer-features/mambaforge:2": {}
 }
 ```
 
@@ -15,8 +15,7 @@ A feature to install mambaforge
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| condaDir | Conda install dir. | string | /opt/conda |
-| mambaforgeVersion | Mambaforge version to install. | string | latest |
+| version | Mambaforge version to install. | string | latest |
 
 
 

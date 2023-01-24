@@ -7,7 +7,7 @@ A feature to install ninja-build
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/ninja:1": {}
+    "ghcr.io/trxcllnt/devcontainer-features/ninja:2": {}
 }
 ```
 
@@ -15,7 +15,7 @@ A feature to install ninja-build
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| ninjaVersion | ninja-build version to install. | string | latest |
+| version | ninja-build version to install. | string | latest |
 
 
 

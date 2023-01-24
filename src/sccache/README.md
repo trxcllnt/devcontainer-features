@@ -7,7 +7,7 @@ A feature to install sccache
 
 ```json
 "features": {
-    "ghcr.io/trxcllnt/devcontainer-features/sccache:1": {}
+    "ghcr.io/trxcllnt/devcontainer-features/sccache:2": {}
 }
 ```
 
@@ -15,7 +15,7 @@ A feature to install sccache
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| sccacheVersion | sccache version to install. | string | latest |
+| version | sccache version to install. | string | latest |
 
 
 

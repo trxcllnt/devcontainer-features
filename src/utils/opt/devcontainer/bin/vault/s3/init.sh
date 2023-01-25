@@ -19,6 +19,9 @@ if [[ -z "${user_orgs:-}" ]]; then
     exit 0;
 fi
 
+# Remove existing credentials in case vault declines to issue new ones.
+rm -rf ~/.aws/{config,credentials};
+
 echo ""
 echo "Attempting to use your GitHub account to authenticate";
 echo "with vault at '$VAULT_HOST'.";
@@ -78,8 +81,8 @@ fi;
 mkdir -p ~/.aws;
 cat <<EOF > ~/.aws/config
 [default]
-region=us-east-2
-bucket=rapids-sccache-devs
+region=${SCCACHE_REGION:-us-east-2}
+bucket=${SCCACHE_BUCKET:-rapids-sccache-devs}
 role_arn=$aws_role_arn
 EOF
 cat <<EOF > ~/.aws/credentials
@@ -96,14 +99,25 @@ unset aws_secret_access_key;
 
 chmod 0600 ~/.aws/{config,credentials};
 
-if [[ "$(grep -q -E "^SCCACHE_S3_USE_SSL=true$" ~/.bashrc &>/dev/null; echo $?)" != 0 ]]; then
-    echo "export SCCACHE_S3_USE_SSL=true" >> ~/.bashrc;
+if [ -z "${SCCACHE_S3_USE_SSL:-}" ] || \
+   [ ! grep -q -E "^SCCACHE_S3_USE_SSL=${SCCACHE_S3_USE_SSL:-true}$" ~/.bashrc ]; then
+    echo "export SCCACHE_S3_USE_SSL=${SCCACHE_S3_USE_SSL:-true}" >> ~/.bashrc;
 fi
-if [[ "$(grep -q -E "^SCCACHE_REGION=us-east-2$" ~/.bashrc &>/dev/null; echo $?)" != 0 ]]; then
-    echo "export SCCACHE_REGION=us-east-2" >> ~/.bashrc;
+if [ -z "${SCCACHE_REGION:-}" ] || \
+   [ ! grep -q -E "^SCCACHE_REGION=${SCCACHE_REGION:-us-east-2}$" ~/.bashrc ]; then
+    echo "export SCCACHE_REGION=${SCCACHE_REGION:-us-east-2}" >> ~/.bashrc;
 fi
-if [[ "$(grep -q -E "^SCCACHE_BUCKET=rapids-sccache-devs$" ~/.bashrc &>/dev/null; echo $?)" != 0 ]]; then
-    echo "export SCCACHE_BUCKET=rapids-sccache-devs" >> ~/.bashrc;
+if [ -z "${SCCACHE_BUCKET:-}" ] || \
+   [ ! grep -q -E "^SCCACHE_BUCKET=${SCCACHE_BUCKET:-rapids-sccache-devs}$" ~/.bashrc ]; then
+    echo "export SCCACHE_BUCKET=${SCCACHE_BUCKET:-rapids-sccache-devs}" >> ~/.bashrc;
+fi
+
+# If we succeeded at least once, install user crontab and refresh creds every 55 minutes
+if ! crontab -l &> /dev/null; then
+    crontab /opt/devcontainer/cron/vault-s3-init            \
+ && sudo touch /var/log/vault-s3-init.log                   \
+ && sudo chown $(id -u):$(id -g) /var/log/vault-s3-init.log \
+ && sudo cron;
 fi
 
 echo "Successfully generated temporary AWS S3 credentials!";

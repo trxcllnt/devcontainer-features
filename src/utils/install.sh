@@ -58,7 +58,7 @@ EOF
 )"
 
 find_non_root_user;
-chown -R ${USERNAME}:${USERNAME} /home/${USERNAME};
+chown -R ${USERNAME}:${USERNAME} "$(bash -c "echo ~${USERNAME}")";
 
 # Generate bash completions
 if dpkg -s bash-completion >/dev/null 2>&1; then

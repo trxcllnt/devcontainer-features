@@ -21,6 +21,10 @@ jobs:
             "https://github.com/trxcllnt/devcontainers-cli/releases/download/v0.29.0-trxcllnt/devcontainer-linux-x64";
           sudo chmod +x /usr/bin/devcontainer;
 
+      - name: Copy common scripts into features
+        shell: bash
+        run: find src -mindepth 1 -maxdepth 1 -type d -exec bash -c 'rm -rf {}/common && cp -ar common {}/' \;
+
       - name: "Publish Features"
         uses: devcontainers/action@v1
         with:
